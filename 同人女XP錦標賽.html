@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>同人女 XP 錦標賽</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #121214;
+      --card-bg: #1e1e24;
+      --card-hover: #26262e;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --primary-light: #a78bfa;
+      --accent: #ec4899;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --text-muted: #6b7280;
+      --border-card: #2e2e38;
+      --bar-bg: #272730;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans TC", sans-serif; user-select: none; }
+    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+    main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px 48px; }
+    .view-content { width: 100%; max-width: 580px; }
+
+    /* 開始頁面專用樣式 */
+    .start-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 10px;
+    }
+    .start-trophy {
+      font-size: 3.8rem;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 8px 24px rgba(236, 72, 153, 0.25));
+      animation: floatTrophy 3s ease-in-out infinite;
+    }
+    @keyframes floatTrophy {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .start-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .start-desc {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      max-width: 420px;
+      margin-bottom: 32px;
+    }
+    .start-meta-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: 18px 24px;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 34px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .start-meta-item { text-align: center; }
+    .start-meta-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .start-meta-val { font-size: 1.45rem; font-weight: 800; }
+
+    .btn-start-game {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      border: none;
+      color: #fff;
+      padding: 16px 48px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 10px 28px rgba(236, 72, 153, 0.35);
+      transition: all 0.25s ease;
+    }
+    .btn-start-game:hover {
+      opacity: 0.94;
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(236, 72, 153, 0.45);
+    }
+    .btn-start-game:active { transform: scale(0.98); }
+
+    /* 低調素雅的底部後台編輯入口按鈕 */
+    .admin-entry-btn {
+      background: transparent;
+      border: 1px solid #282832;
+      border-radius: 999px;
+      color: #71717a;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+      margin-top: 36px;
+    }
+    .admin-entry-btn:hover {
+      color: #a1a1aa;
+      border-color: #3f3f4e;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* 錦標賽對決畫面樣式 */
+    .header-area { text-align: center; margin-bottom: 20px; }
+    .title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; color: #ffffff; }
+    .subtitle { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px; }
+
+    .progress-bar-container {
+      width: 100%; height: 6px; background-color: var(--bar-bg);
+      border-radius: 999px; overflow: hidden; margin-bottom: 12px;
+    }
+    .progress-bar-fill {
+      height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 999px; transition: width 0.3s ease;
+    }
+    .progress-meta {
+      display: flex; justify-content: center; gap: 8px;
+      font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px;
+    }
+
+    .round-pill {
+      display: inline-block; background-color: rgba(139, 92, 246, 0.18);
+      color: var(--primary-light); font-size: 0.82rem; font-weight: 600;
+      padding: 5px 18px; border-radius: 999px; margin-bottom: 20px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .round-pill.highlight {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(139, 92, 246, 0.25));
+      border-color: var(--accent); color: #fce7f3; font-weight: 700;
+    }
+
+    .bye-banner {
+      background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fbbf24; font-size: 0.88rem; padding: 10px 16px; border-radius: 12px;
+      margin-bottom: 20px; text-align: center; display: none;
+    }
+    .bye-banner.show { display: block; }
+    .bye-banner strong { color: #f59e0b; }
+
+    .pk-container {
+      display: flex; flex-direction: column; gap: 14px; width: 100%; margin-bottom: 18px;
+    }
+    .pk-card {
+      background: var(--card-bg); border: 1.5px solid var(--border-card);
+      border-radius: 20px; padding: 26px 20px; text-align: center;
+      cursor: pointer; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 140px;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    .pk-card:hover {
+      background: var(--card-hover);
+    }
+    
+    .pk-card.selected {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5), 0 8px 24px rgba(139, 92, 246, 0.3) !important;
+      transform: scale(0.985);
+    }
+
+    .pk-card.click-pulse {
+      animation: clickShutter 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes clickShutter {
+      0% {
+        border-color: var(--border-card);
+        box-shadow: none;
+        transform: scale(1);
+      }
+      25% {
+        border-color: var(--border-card);
+        box-shadow: none;
+        transform: scale(0.965);
+      }
+      55% {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3.5px rgba(139, 92, 246, 0.55), 0 8px 26px rgba(139, 92, 246, 0.35);
+        transform: scale(0.985);
+      }
+      82% {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3), 0 6px 18px rgba(139, 92, 246, 0.2);
+        transform: scale(0.995);
+      }
+      100% {
+        border-color: var(--border-card);
+        box-shadow: none;
+        transform: scale(1);
+      }
+    }
+
+    .card-title { font-size: 1.35rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+    .card-desc { font-size: 0.86rem; color: var(--text-sub); margin-bottom: 14px; line-height: 1.4; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .tag-badge {
+      font-size: 0.72rem; padding: 3px 9px; border-radius: 6px;
+      font-weight: 600; color: #ffffff;
+    }
+    .tag-c-pink { background-color: #ec4899; }
+    .tag-c-blue { background-color: #3b82f6; }
+    .tag-c-green { background-color: #10b981; }
+    .tag-c-purple { background-color: #8b5cf6; }
+    .tag-c-orange { background-color: #f97316; }
+
+    .vs-text {
+      text-align: center; color: var(--primary-light); font-size: 1rem;
+      font-weight: 800; letter-spacing: 1px; margin: 4px 0;
+    }
+
+    .game-actions {
+      display: flex; justify-content: center; gap: 14px; margin-top: 14px;
+    }
+    .btn-action-round {
+      background: transparent; border: 1.5px solid var(--border-card); color: var(--text-sub);
+      padding: 9px 24px; border-radius: 999px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: 0.2s;
+    }
+    .btn-action-round:hover:not(:disabled) { border-color: var(--primary); color: #ffffff; }
+    .btn-action-round:disabled { opacity: 0.35; cursor: not-allowed; border-color: var(--border-card); }
+
+    /* 結果報告分析面板 */
+    .result-box { display: none; width: 100%; max-width: 580px; }
+    .result-box.show { display: flex; flex-direction: column; gap: 18px; }
+
+    .res-card {
+      background: var(--card-bg); border: 1.5px solid var(--border-card);
+      border-radius: 24px; padding: 24px 20px;
+    }
+
+    .champion-card {
+      text-align: center; border-color: rgba(236, 72, 153, 0.4);
+      background: radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.12), transparent 70%), var(--card-bg);
+    }
+    .trophy-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .champ-name { font-size: 1.7rem; font-weight: 800; color: #ffffff; margin-bottom: 6px; }
+    .champ-desc { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 12px; }
+
+    /* 頂層/中層/底層 3 個堆疊長橫條 */
+    .podium-ranks {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border-card);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      width: 100%;
+    }
+    .podium-item {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+    .podium-item:hover {
+      background: rgba(255, 255, 255, 0.045);
+    }
+    .podium-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .podium-tag {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .podium-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+    .podium-desc {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dna-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+    .dna-list { display: flex; flex-direction: column; gap: 10px; }
+    .dna-row { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+    .dna-label { width: 64px; text-align: right; color: var(--text-sub); font-weight: 600; white-space: nowrap; }
+    .dna-track { flex: 1; height: 14px; background: var(--bar-bg); border-radius: 999px; overflow: hidden; }
+    .dna-fill { height: 100%; border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    .dna-val { width: 36px; text-align: right; color: var(--text-muted); font-size: 0.8rem; }
+    .dna-footer { font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; text-align: right; }
+
+    .top-ranks-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .rank-mini-card {
+      background: #17171c;
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .rank-mini-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+    .rank-mini-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .rank-mini-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .portrait-card {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(236, 72, 153, 0.25); text-align: center; padding: 22px 18px;
+    }
+    .portrait-badge { font-size: 0.82rem; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
+    .portrait-text { font-size: 0.94rem; line-height: 1.6; color: #fce7f3; }
+
+    .path-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; }
+    .path-list { display: flex; flex-direction: column; gap: 8px; font-size: 0.84rem; color: var(--text-sub); }
+    .path-row { display: flex; align-items: center; gap: 8px; }
+    .path-row .win { color: #10b981; font-weight: 700; margin-left: auto; }
+
+    .bottom-actions { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 8px; margin-bottom: 24px; }
+    .bottom-btn-row { display: flex; justify-content: center; gap: 12px; width: 100%; }
+    .btn-main {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      border: none; color: #fff; padding: 12px 30px; border-radius: 999px;
+      font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.2s;
+    }
+    .btn-main:hover { opacity: 0.9; }
+
+    /* 後台管理介面 */
+    .admin-view { display: none; }
+    .admin-view.show { display: block; }
+    .admin-card {
+      background: var(--card-bg); border: 1px solid var(--border-card);
+      border-radius: 20px; padding: 24px;
+    }
+    .admin-input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .admin-input {
+      background: #17171c; border: 1px solid var(--border-card); color: var(--text-main);
+      padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; outline: none;
+    }
+    .admin-input:focus { border-color: var(--primary); }
+
+    .tag-selector-box {
+      background: #17171c; border: 1px solid var(--border-card); border-radius: 10px; padding: 12px;
+    }
+    .selector-label { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px; display: block; font-weight: 600; }
+    .tag-checkbox-list {
+      display: flex; flex-wrap: wrap; gap: 8px; max-height: 130px; overflow-y: auto; padding-bottom: 4px;
+    }
+    .tag-check-item {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem;
+      background: #23232b; padding: 4px 10px; border-radius: 6px; cursor: pointer; border: 1px solid transparent;
+    }
+    .tag-check-item:hover { border-color: var(--primary); }
+    .tag-check-item input[type="checkbox"] { cursor: pointer; accent-color: var(--primary); }
+
+    .custom-tag-group {
+      display: flex; gap: 8px; margin-top: 10px;
+    }
+    .custom-tag-group input { flex: 1; padding: 6px 12px; font-size: 0.82rem; }
+    .btn-tag-add {
+      background: #2e2e38; color: var(--text-main); border: 1px solid var(--primary); border-radius: 8px;
+      padding: 6px 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-tag-add:hover { background: var(--primary); color: #fff; }
+
+    .btn-add {
+      background: var(--primary); color: white; border: none; padding: 11px;
+      border-radius: 10px; font-weight: 700; cursor: pointer;
+    }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    .data-table th, .data-table td {
+      padding: 12px 10px; border-bottom: 1px solid var(--border-card); font-size: 0.88rem; text-align: left;
+    }
+    .data-table th { color: var(--text-muted); }
+    .btn-action-table { background: none; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 600; padding: 2px 6px; }
+    .btn-edit { color: var(--primary-light); }
+    .btn-del { color: #ef4444; }
+
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal-box {
+      background: var(--card-bg); border: 1px solid var(--border-card);
+      border-radius: 18px; padding: 24px; width: 100%; max-width: 440px;
+      display: flex; flex-direction: column; gap: 12px; max-height: 90vh; overflow-y: auto;
+    }
+
+    @media (max-width: 500px) {
+      .top-ranks-cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- 1. 遊戲開始前首頁 (Start View) -->
+    <div id="startView" class="view-content start-container">
+      <div class="start-trophy">🏆</div>
+      <h1 class="start-title">同人女 XP 錦標賽</h1>
+      <p class="start-desc">兩兩 PK，層層淘汰，決出你內心最吃的那一個</p>
+
+      <div class="start-meta-box">
+        <div class="start-meta-item">
+          <div class="start-meta-label">收錄 XP 總數</div>
+          <div class="start-meta-val" id="startTotalItems" style="color:var(--primary-light);">0</div>
+        </div>
+        <div class="start-meta-item">
+          <div class="start-meta-label">預計對決場次</div>
+          <div class="start-meta-val" id="startTotalMatches" style="color:var(--accent);">0</div>
+        </div>
+      </div>
+
+      <button class="btn-start-game" onclick="startGameSession()">開始錦標賽</button>
+
+      <!-- 只有開始頁面下方提供後台編輯 -->
+      <div>
+        <button class="admin-entry-btn" onclick="openAdminView('start')">後台管理</button>
+      </div>
+    </div>
+
+    <!-- 2. 錦標賽對決畫面 (進行中無任何後台按鈕) -->
+    <div id="gameView" class="view-content" style="display: none;">
+      <div class="header-area">
+        <h1 class="title">同人女XP錦標賽</h1>
+        <div class="subtitle">兩兩 PK，層層淘汰，決出你內心最吃的那一個</div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+
+      <div class="progress-meta">
+        <span id="metaRoundText">第 1 輪</span>
+        <span>•</span>
+        <span>剩餘 <strong id="metaRemain">0</strong> 個</span>
+        <span>•</span>
+        <span>已完成 <strong id="metaDone">0</strong>/<span id="metaTotalMatches">0</span></span>
+      </div>
+
+      <div style="text-align: center;">
+        <span class="round-pill" id="roundPill">第 1 輪</span>
+      </div>
+
+      <div class="bye-banner" id="byeBanner">
+        🎟️ 本輪 <strong id="byeItemName"></strong> 隨機輪空，直接晉級下一輪
+      </div>
+
+      <div class="pk-container">
+        <div class="pk-card" id="cardA">
+          <div class="card-title" id="titleA">選項 A</div>
+          <div class="card-desc" id="descA">描述 A</div>
+          <div class="tag-list" id="tagsA"></div>
+        </div>
+
+        <div class="vs-text">VS</div>
+
+        <div class="pk-card" id="cardB">
+          <div class="card-title" id="titleB">選項 B</div>
+          <div class="card-desc" id="descB">描述 B</div>
+          <div class="tag-list" id="tagsB"></div>
+        </div>
+      </div>
+
+      <div class="game-actions">
+        <button class="btn-action-round" id="btnUndo" onclick="undoChoice()" disabled>↩ 回到上一題</button>
+        <button class="btn-action-round" onclick="returnToStartView()">重新開始</button>
+      </div>
+    </div>
+
+    <!-- 3. 錦標賽結果報告面板 -->
+    <div id="resultView" class="view-content result-box">
+      <div class="header-area" style="margin-bottom: 12px;">
+        <h1 class="title">同人女XP錦標賽</h1>
+        <div class="subtitle">兩兩 PK，層層淘汰，決出你內心最吃的那一個</div>
+      </div>
+
+      <!-- 冠軍卡片 (含 2, 3, 4 名明確展示) -->
+      <div class="res-card champion-card">
+        <div class="trophy-icon">🏆</div>
+        <div class="champ-name" id="resChampName">明戀</div>
+        <div class="champ-desc" id="resChampDesc">公開直球的喜歡</div>
+        <div class="tag-list" id="resChampTags"></div>
+
+        <div class="podium-ranks" id="resPodiumContainer"></div>
+      </div>
+
+      <!-- 你的 XP DNA 長條圖統計 -->
+      <div class="res-card">
+        <div class="dna-title">📊 你的 xp DNA</div>
+        <div class="dna-list" id="dnaListContainer"></div>
+        <div class="dna-footer" id="dnaFooterText">基於本輪次選擇統計</div>
+      </div>
+
+      <!-- 決賽名單 & 偏好洞察 -->
+      <div class="res-card">
+        <div class="dna-title" id="resTopRanksTitle">🧬 決賽名單 & 偏好洞察</div>
+        <div class="top-ranks-cards-grid" id="topRanksCardsContainer"></div>
+        <p style="font-size:0.86rem; color:var(--text-sub); line-height: 1.6;" id="resInsightText"></p>
+      </div>
+
+      <!-- 一句語畫像 -->
+      <div class="res-card portrait-card">
+        <div class="portrait-badge">💬 一句語畫像</div>
+        <div class="portrait-text" id="resPortraitText"></div>
+      </div>
+
+      <!-- 冠軍晉級之路 -->
+      <div class="res-card">
+        <div class="path-title">📈 冠軍晉級之路</div>
+        <div class="path-list" id="championPathList"></div>
+      </div>
+
+      <div class="bottom-actions">
+        <div class="bottom-btn-row">
+          <button class="btn-action-round" onclick="undoChoice()" style="background:var(--card-bg); border-color:var(--border-card);">↩ 回到最後一題</button>
+          <button class="btn-main" onclick="returnToStartView()">再來一局</button>
+        </div>
+        <!-- 只有最後結果頁下方提供後台編輯 -->
+        <button class="admin-entry-btn" style="margin-top: 12px;" onclick="openAdminView('result')">後台管理</button>
+      </div>
+    </div>
+
+    <!-- 4. 後台編輯詞庫 (只能由首頁或結果頁進入) -->
+    <div id="adminView" class="view-content admin-view">
+      <div class="admin-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 style="font-size: 1.15rem; font-weight:700;">自訂 XP 與標籤管理</h3>
+          <button class="admin-entry-btn" style="margin-top:0;" onclick="closeAdminView()">返回</button>
+        </div>
+        
+        <div class="admin-input-row">
+          <input type="text" id="newName" class="admin-input" placeholder="名稱（例如：破鏡重圓）">
+          <input type="text" id="newDesc" class="admin-input" placeholder="描述（例如：分開後又複合）">
+          
+          <div class="tag-selector-box">
+            <span class="selector-label">選擇標籤（可多選）：</span>
+            <div class="tag-checkbox-list" id="adminTagCheckboxes"></div>
+            
+            <div class="custom-tag-group">
+              <input type="text" id="customTagInput" class="admin-input" placeholder="新增自訂標籤（其他）">
+              <button type="button" class="btn-tag-add" onclick="addNewGlobalTag('adminTagCheckboxes', 'customTagInput')">＋ 新增至選單</button>
+            </div>
+          </div>
+
+          <button class="btn-add" onclick="addNewItem()">＋ 新增至詞庫</button>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-top:20px; padding-bottom:4px;">
+          <h4 style="font-size: 0.95rem; font-weight:600;">現有題庫 (<span id="adminCount">0</span>)</h4>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="file" id="importFileInput" accept=".json,application/json,text/plain" style="display:none;" onchange="handleImportFile(event)">
+            <button type="button" class="btn-tag-add" style="padding:4px 10px; font-size:0.75rem;" onclick="document.getElementById('importFileInput').click()">匯入 (JSON)</button>
+            <button type="button" class="btn-tag-add" style="padding:4px 10px; font-size:0.75rem;" onclick="exportDataJSON()">匯出全部 (題庫+標籤)</button>
+            <button type="button" class="btn-tag-add" style="padding:4px 10px; font-size:0.75rem;" onclick="exportOnlyTagsJSON()">匯出純標籤</button>
+            <button onclick="restoreDefaultData()" style="background:none; border:none; color:var(--text-muted); text-decoration:underline; font-size:0.78rem; cursor:pointer; margin-left:4px;">還原預設</button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>名稱</th>
+                <th>描述</th>
+                <th>標籤</th>
+                <th style="text-align:right;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 編輯彈窗 Modal -->
+  <div id="editModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3 style="font-size:1.1rem; font-weight:700;">編輯項目</h3>
+      <input type="text" id="editName" class="admin-input" placeholder="名稱">
+      <input type="text" id="editDesc" class="admin-input" placeholder="描述">
+      
+      <div class="tag-selector-box">
+        <span class="selector-label">選擇標籤：</span>
+        <div class="tag-checkbox-list" id="editTagCheckboxes"></div>
+        <div class="custom-tag-group">
+          <input type="text" id="editCustomTagInput" class="admin-input" placeholder="新增自訂標籤（其他）">
+          <button type="button" class="btn-tag-add" onclick="addNewGlobalTag('editTagCheckboxes', 'editCustomTagInput')">＋ 新增至選單</button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button onclick="closeEditModal()" class="btn-action-round" style="padding:6px 16px; font-size:0.85rem;">取消</button>
+        <button onclick="saveEditItem()" class="btn-add" style="padding:6px 16px; font-size:0.85rem;">保存修改</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_XP_LIST = [
+      { name: "死遁", desc: "假死/真死來成全對方", tags: ["虐戀", "宿命"] },
+      { name: "枯木逢春", desc: "冷漠之人終被融化", tags: ["救贖"] },
+      { name: "破鏡重圓", desc: "分開後又複合", tags: ["虐戀", "羈絆"] },
+      { name: "老夫老妻", desc: "細水長流式感情", tags: ["日常甜", "羈絆"] },
+      { name: "爛人真心", desc: "滿身劣跡卻唯獨對你真摯", tags: ["偏執", "虐戀"] },
+      { name: "聖人私心", desc: "為一人甘願跌落神壇", tags: ["禁忌", "瘋批"] },
+      { name: "恨海情天", desc: "愛恨交織，至死方休", tags: ["虐戀", "宿命"] },
+      { name: "鏡花水月", desc: "看似觸手可及的幻象悲劇", tags: ["虐戀", "BE"] },
+      { name: "明月高懸", desc: "可望而不可即的高嶺之花", tags: ["佔有", "求而不得"] },
+      { name: "歡喜冤家", desc: "見面互懟，背地牽掛", tags: ["日常甜", "輕喜劇"] },
+      { name: "宿敵變摯友", desc: "從不死不休到背靠背作戰", tags: ["羈絆", "雙強"] },
+      { name: "摯友變宿敵", desc: "信仰相悖，親手割袍斷義", tags: ["對抗", "虐戀"] },
+      { name: "相愛相殺", desc: "博弈對峙，互為軟肋亦是利刃", tags: ["對抗", "雙強"] },
+      { name: "師徒", desc: "綱常倫理下的不可言說", tags: ["禁忌", "權力差"] },
+      { name: "骨科", desc: "同根共生的血脈深淵", tags: ["禁忌", "宿命"] },
+      { name: "偽骨科", desc: "同一屋簷下的曖昧潮湧", tags: ["禁忌", "拉扯"] },
+      { name: "愛而不得", desc: "耗盡半生終究隔海相望", tags: ["虐戀", "執念"] },
+      { name: "先婚後愛", desc: "從利益搭夥到假戲真做", tags: ["契約", "日常甜"] },
+      { name: "強制愛", desc: "斬斷所有退路的禁錮與掌控", tags: ["佔有", "權力差"] },
+      { name: "默默守護", desc: "不求回應的退後一步", tags: ["救贖", "暗戀"] },
+      { name: "青梅竹馬", desc: "刻進成長骨髓的陪伴", tags: ["羈絆", "日常甜"] },
+      { name: "天降", desc: "蠻橫撞進平靜生活的流星", tags: ["宿命", "心動"] },
+      { name: "年上", desc: "掌控感與游刃有餘的引領", tags: ["權力差", "成熟"] },
+      { name: "年下", desc: "直球追擊與隱忍的野心", tags: ["佔有", "直球"] },
+      { name: "救贖", desc: "將你拉出無光泥沼的唯一光芒", tags: ["救贖", "宿命"] },
+      { name: "一起腐爛", desc: "不求光明，只求與你同沉深淵", tags: ["宿命", "虐戀"] },
+      { name: "暗戀", desc: "一人兵荒馬亂的秘密花園", tags: ["酸澀", "執念"] },
+      { name: "明戀", desc: "人盡皆知的坦蕩與赤誠", tags: ["日常甜", "直球"] },
+      { name: "雙強", desc: "勢均力敵，王座並肩", tags: ["雙強", "對抗"] },
+      { name: "霸總嬌妻", desc: "絕對財力與絕對專寵", tags: ["日常甜", "權力差"] },
+      { name: "追妻火葬場", desc: "曾棄之如履，今卑微求渡", tags: ["虐戀", "救贖"] },
+      { name: "追夫火葬場", desc: "幡然醒悟後的挽留與彌補", tags: ["虐戀", "執念"] },
+      { name: "對抗路", desc: "寸土必爭，針鋒相對的火花", tags: ["對抗", "雙強"] },
+      { name: "露水姻緣", desc: "清醒著沉淪的成年人限定", tags: ["宿命", "救贖"] },
+      { name: "白頭偕老", desc: "歲月沉澱後的共赴白首", tags: ["日常甜", "羈絆"] },
+      { name: "日久生情", desc: "不知不覺間已依賴入骨", tags: ["日常甜", "羈絆"] },
+      { name: "一見鍾情", desc: "回眸一眼即是萬年沉淪", tags: ["宿命", "心動"] },
+      { name: "君臣", desc: "社稷江山下的君臣之禮", tags: ["權力差", "禁忌"] },
+      { name: "主僕", desc: "身份懸殊下的唯命是從", tags: ["權力差", "救贖"] },
+      { name: "前世今生", desc: "孟婆湯洗不掉的靈魂印記", tags: ["宿命", "虐戀"] },
+      { name: "錯位時空", desc: "我身在未來，你留在過去", tags: ["宿命", "虐戀"] },
+      { name: "蘭因絮果", desc: "花開燦爛，落絮荒涼", tags: ["虐戀", "BE"] },
+      { name: "莞莞類卿", desc: "透過你看向另一個影子", tags: ["虐戀", "佔有"] },
+      { name: "明媒正娶", desc: "鳳冠霞帔，天下共證", tags: ["日常甜", "名正言順"] },
+      { name: "地下情", desc: "無人知曉的幽暗微光", tags: ["禁忌", "刺激"] }
+    ];
+
+    const DEFAULT_AVAILABLE_TAGS = [
+      "虐戀", "宿命", "救贖", "羈絆", "日常甜", "偏執", "禁忌", "瘋批",
+      "BE", "佔有", "求而不得", "輕喜劇", "雙強", "對抗", "權力差", "拉扯",
+      "執念", "契約", "暗戀", "心動", "成熟", "直球", "酸澀", "名正言順", "刺激"
+    ];
+
+    let currentPool = JSON.parse(localStorage.getItem('xp_tour_dark_v15')) || [...DEFAULT_XP_LIST];
+    let availableTags = JSON.parse(localStorage.getItem('xp_available_tags_v15')) || [...DEFAULT_AVAILABLE_TAGS];
+
+    let roundNumber = 1;
+    let currentRoundCandidates = [];
+    let nextRoundCandidates = [];
+    let currentPairs = [];
+    let pairIndex = 0;
+    let totalMatchesNeeded = 0;
+    let completedMatches = 0;
+
+    let finalMode = null;
+    let semiFinalists = [];
+    let semiLosers = [];
+    let finalistA = null;
+    let finalistB = null;
+    let isBronzeMatch = false;
+    let isFinalMatch = false;
+
+    let roundRobinItems = [];
+    let roundRobinPairs = [];
+    let roundRobinIdx = 0;
+    let roundRobinScores = {};
+
+    let finalRankings = [];
+    let tagStats = {};
+    let editingItemIdx = -1;
+
+    let historySnapshots = [];
+    let isAnimating = false;
+    let adminCaller = 'start';
+
+    function savePool() {
+      localStorage.setItem('xp_tour_dark_v15', JSON.stringify(currentPool));
+    }
+    function saveTags() {
+      localStorage.setItem('xp_available_tags_v15', JSON.stringify(availableTags));
+    }
+
+    const TAG_COLORS = ['tag-c-pink', 'tag-c-blue', 'tag-c-green', 'tag-c-purple', 'tag-c-orange'];
+    function getTagColorClass(tagStr) {
+      let hash = 0;
+      for (let i = 0; i < tagStr.length; i++) hash += tagStr.charCodeAt(i);
+      return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
+    }
+
+    const DNA_BAR_COLORS = [
+      '#ec4899', '#8b5cf6', '#f97316', '#3b82f6', '#f43f5e',
+      '#eab308', '#10b981', '#ef4444', '#a855f7'
+    ];
+
+    /* 首頁與後台路由控制 */
+    function updateStartViewMeta() {
+      document.getElementById('startTotalItems').textContent = currentPool.length;
+      document.getElementById('startTotalMatches').textContent = Math.max(1, currentPool.length);
+    }
+
+    function startGameSession() {
+      document.getElementById('startView').style.display = 'none';
+      document.getElementById('resultView').classList.remove('show');
+      document.getElementById('adminView').classList.remove('show');
+      document.getElementById('gameView').style.display = 'block';
+
+      initTournament();
+    }
+
+    function returnToStartView() {
+      document.getElementById('gameView').style.display = 'none';
+      document.getElementById('resultView').classList.remove('show');
+      document.getElementById('adminView').classList.remove('show');
+      document.getElementById('startView').style.display = 'flex';
+      updateStartViewMeta();
+    }
+
+    function openAdminView(from) {
+      adminCaller = from;
+      document.getElementById('startView').style.display = 'none';
+      document.getElementById('gameView').style.display = 'none';
+      document.getElementById('resultView').classList.remove('show');
+      document.getElementById('adminView').classList.add('show');
+
+      renderAdminList();
+      renderTagCheckboxList('adminTagCheckboxes');
+    }
+
+    function closeAdminView() {
+      document.getElementById('adminView').classList.remove('show');
+      if (adminCaller === 'result') {
+        document.getElementById('resultView').classList.add('show');
+      } else {
+        document.getElementById('startView').style.display = 'flex';
+        updateStartViewMeta();
+      }
+    }
+
+    function initTournament() {
+      currentPool.forEach(item => { item._path = []; });
+
+      currentRoundCandidates = [...currentPool].sort(() => Math.random() - 0.5);
+      nextRoundCandidates = [];
+      
+      finalMode = null;
+      semiFinalists = [];
+      semiLosers = [];
+      finalistA = null;
+      finalistB = null;
+      isBronzeMatch = false;
+      isFinalMatch = false;
+
+      roundRobinItems = [];
+      roundRobinPairs = [];
+      roundRobinIdx = 0;
+      roundRobinScores = {};
+
+      finalRankings = [];
+      tagStats = {};
+      historySnapshots = [];
+      isAnimating = false;
+
+      roundNumber = 1;
+      pairIndex = 0;
+      completedMatches = 0;
+
+      totalMatchesNeeded = Math.max(1, currentPool.length);
+      document.getElementById('metaTotalMatches').textContent = totalMatchesNeeded;
+
+      setupCurrentRoundPairs();
+      prepareMatch();
+    }
+
+    function setupCurrentRoundPairs() {
+      const candidates = [...currentRoundCandidates].sort(() => Math.random() - 0.5);
+      const byeBanner = document.getElementById('byeBanner');
+
+      if (candidates.length === 4) {
+        finalMode = 'four';
+        semiFinalists = [...candidates];
+      }
+
+      if (candidates.length % 2 !== 0 && candidates.length > 3) {
+        const byeIndex = Math.floor(Math.random() * candidates.length);
+        const byeItem = candidates.splice(byeIndex, 1)[0];
+        nextRoundCandidates.push(byeItem);
+
+        byeBanner.classList.add('show');
+        document.getElementById('byeItemName').textContent = byeItem.name;
+
+        byeItem._path = byeItem._path || [];
+        byeItem._path.push({ round: `第 ${roundNumber} 輪`, opponent: '輪空晉級', isBye: true });
+      } else {
+        byeBanner.classList.remove('show');
+      }
+
+      currentPairs = [];
+      for (let i = 0; i < candidates.length; i += 2) {
+        if (candidates[i + 1]) {
+          currentPairs.push([candidates[i], candidates[i + 1]]);
+        }
+      }
+      pairIndex = 0;
+    }
+
+    function prepareMatch() {
+      document.getElementById('cardA').classList.remove('click-pulse', 'selected');
+      document.getElementById('cardB').classList.remove('click-pulse', 'selected');
+
+      updateUndoButtonState();
+
+      if (finalMode === 'three') {
+        document.getElementById('byeBanner').classList.remove('show');
+        if (roundRobinIdx < roundRobinPairs.length) {
+          const pair = roundRobinPairs[roundRobinIdx];
+          setRoundLabel(`三強循環賽 (${roundRobinIdx + 1}/3)`);
+          renderCard('A', pair[0]);
+          renderCard('B', pair[1]);
+          updateMetaDisplay();
+          return;
+        } else {
+          finishThreeTournament();
+          return;
+        }
+      }
+
+      if (finalMode === 'four') {
+        if (isBronzeMatch) {
+          setRoundLabel("季軍賽");
+          document.getElementById('byeBanner').classList.remove('show');
+          renderCard('A', semiLosers[0]);
+          renderCard('B', semiLosers[1]);
+          updateMetaDisplay();
+          return;
+        }
+
+        if (isFinalMatch) {
+          setRoundLabel("冠軍賽");
+          document.getElementById('byeBanner').classList.remove('show');
+          renderCard('A', finalistA);
+          renderCard('B', finalistB);
+          updateMetaDisplay();
+          return;
+        }
+      }
+
+      if (pairIndex >= currentPairs.length) {
+        currentRoundCandidates = [...nextRoundCandidates];
+        nextRoundCandidates = [];
+        roundNumber++;
+
+        if (currentRoundCandidates.length === 3) {
+          startThreeRoundRobin(currentRoundCandidates);
+          prepareMatch();
+          return;
+        }
+
+        if (currentRoundCandidates.length === 4) {
+          finalMode = 'four';
+          semiFinalists = [...currentRoundCandidates];
+          setupCurrentRoundPairs();
+          prepareMatch();
+          return;
+        }
+
+        if (finalMode === 'four' && currentRoundCandidates.length === 2 && semiLosers.length >= 2) {
+          finalistA = currentRoundCandidates[0];
+          finalistB = currentRoundCandidates[1];
+          isBronzeMatch = true;
+          prepareMatch();
+          return;
+        }
+
+        if (currentRoundCandidates.length <= 2) {
+          if (currentRoundCandidates.length === 2) {
+            finalistA = currentRoundCandidates[0];
+            finalistB = currentRoundCandidates[1];
+            finalMode = 'four';
+            isFinalMatch = true;
+            prepareMatch();
+            return;
+          } else {
+            finalRankings = [{ rank: 1, label: '👑 冠軍', item: currentRoundCandidates[0] }];
+            finishTournamentDisplay();
+            return;
+          }
+        }
+
+        setupCurrentRoundPairs();
+      }
+
+      setRoundLabel(`第 ${roundNumber} 輪`);
+      updateMetaDisplay();
+
+      const pair = currentPairs[pairIndex];
+      renderCard('A', pair[0]);
+      renderCard('B', pair[1]);
+    }
+
+    function startThreeRoundRobin(items) {
+      finalMode = 'three';
+      roundRobinItems = [...items];
+      roundRobinScores = {};
+      roundRobinItems.forEach(it => { roundRobinScores[it.name] = 0; });
+      
+      roundRobinPairs = [
+        [roundRobinItems[0], roundRobinItems[1]],
+        [roundRobinItems[1], roundRobinItems[2]],
+        [roundRobinItems[0], roundRobinItems[2]]
+      ];
+      roundRobinIdx = 0;
+
+      totalMatchesNeeded = completedMatches + 3;
+      document.getElementById('metaTotalMatches').textContent = totalMatchesNeeded;
+    }
+
+    function setRoundLabel(text) {
+      const pill = document.getElementById('roundPill');
+      const metaText = document.getElementById('metaRoundText');
+      pill.textContent = text;
+      metaText.textContent = text;
+
+      if (text.includes("冠軍") || text.includes("季軍") || text.includes("三強")) {
+        pill.classList.add('highlight');
+      } else {
+        pill.classList.remove('highlight');
+      }
+    }
+
+    function renderCard(target, item) {
+      document.getElementById('title' + target).textContent = item ? item.name : '未知';
+      document.getElementById('desc' + target).textContent = (item && item.desc) ? item.desc : '無描述';
+
+      const tagContainer = document.getElementById('tags' + target);
+      tagContainer.innerHTML = '';
+      if (item && item.tags) {
+        item.tags.forEach(t => {
+          const span = document.createElement('span');
+          span.className = `tag-badge ${getTagColorClass(t)}`;
+          span.textContent = t;
+          tagContainer.appendChild(span);
+        });
+      }
+    }
+
+    function saveCurrentState() {
+      const state = {
+        roundNumber,
+        currentRoundCandidates: JSON.parse(JSON.stringify(currentRoundCandidates)),
+        nextRoundCandidates: JSON.parse(JSON.stringify(nextRoundCandidates)),
+        currentPairs: JSON.parse(JSON.stringify(currentPairs)),
+        pairIndex,
+        completedMatches,
+        finalMode,
+        semiFinalists: JSON.parse(JSON.stringify(semiFinalists)),
+        semiLosers: JSON.parse(JSON.stringify(semiLosers)),
+        finalistA: finalistA ? JSON.parse(JSON.stringify(finalistA)) : null,
+        finalistB: finalistB ? JSON.parse(JSON.stringify(finalistB)) : null,
+        isBronzeMatch,
+        isFinalMatch,
+        roundRobinItems: JSON.parse(JSON.stringify(roundRobinItems)),
+        roundRobinPairs: JSON.parse(JSON.stringify(roundRobinPairs)),
+        roundRobinIdx,
+        roundRobinScores: JSON.parse(JSON.stringify(roundRobinScores)),
+        finalRankings: JSON.parse(JSON.stringify(finalRankings)),
+        tagStats: JSON.parse(JSON.stringify(tagStats)),
+        poolState: JSON.parse(JSON.stringify(currentPool))
+      };
+      historySnapshots.push(state);
+    }
+
+    function undoChoice() {
+      if (historySnapshots.length === 0) return;
+      const prev = historySnapshots.pop();
+
+      roundNumber = prev.roundNumber;
+      currentRoundCandidates = prev.currentRoundCandidates;
+      nextRoundCandidates = prev.nextRoundCandidates;
+      currentPairs = prev.currentPairs;
+      pairIndex = prev.pairIndex;
+      completedMatches = prev.completedMatches;
+      finalMode = prev.finalMode;
+      semiFinalists = prev.semiFinalists || [];
+      semiLosers = prev.semiLosers || [];
+      finalistA = prev.finalistA;
+      finalistB = prev.finalistB;
+      isBronzeMatch = prev.isBronzeMatch;
+      isFinalMatch = prev.isFinalMatch;
+      roundRobinItems = prev.roundRobinItems || [];
+      roundRobinPairs = prev.roundRobinPairs || [];
+      roundRobinIdx = prev.roundRobinIdx || 0;
+      roundRobinScores = prev.roundRobinScores || {};
+      finalRankings = prev.finalRankings || [];
+      tagStats = prev.tagStats;
+      currentPool = prev.poolState;
+      isAnimating = false;
+
+      document.getElementById('resultView').classList.remove('show');
+      document.getElementById('gameView').style.display = 'block';
+
+      prepareMatch();
+    }
+
+    function updateUndoButtonState() {
+      const btn = document.getElementById('btnUndo');
+      if (btn) btn.disabled = (historySnapshots.length === 0);
+    }
+
+    function attachCardEvents(cardId, selectedIndex) {
+      const card = document.getElementById(cardId);
+      const otherCard = document.getElementById(cardId === 'cardA' ? 'cardB' : 'cardA');
+      let pressTimer = null;
+      let isLongPress = false;
+
+      function startPress(e) {
+        if (isAnimating) return;
+        isLongPress = false;
+        pressTimer = setTimeout(() => {
+          isLongPress = true;
+          otherCard.classList.remove('selected');
+          card.classList.add('selected');
+        }, 280);
+      }
+
+      function cancelPress() {
+        if (pressTimer) clearTimeout(pressTimer);
+      }
+
+      function handleClick(e) {
+        if (pressTimer) clearTimeout(pressTimer);
+        if (isAnimating) return;
+        if (isLongPress) {
+          isLongPress = false;
+          return;
+        }
+
+        isAnimating = true;
+        otherCard.classList.remove('selected', 'click-pulse');
+        card.classList.remove('selected');
+        void card.offsetWidth;
+
+        card.classList.add('click-pulse');
+
+        setTimeout(() => {
+          card.classList.remove('click-pulse');
+          makeChoice(selectedIndex);
+          isAnimating = false;
+        }, 370);
+      }
+
+      card.addEventListener('mousedown', startPress);
+      card.addEventListener('touchstart', startPress, { passive: true });
+      card.addEventListener('mouseup', handleClick);
+      card.addEventListener('touchend', handleClick);
+      card.addEventListener('mouseleave', cancelPress);
+      card.addEventListener('touchcancel', cancelPress);
+    }
+
+    attachCardEvents('cardA', 0);
+    attachCardEvents('cardB', 1);
+
+    function makeChoice(selectedIndex) {
+      saveCurrentState();
+
+      if (finalMode === 'three') {
+        const pair = roundRobinPairs[roundRobinIdx];
+        const winner = selectedIndex === 0 ? pair[0] : pair[1];
+        const loser = selectedIndex === 0 ? pair[1] : pair[0];
+
+        roundRobinScores[winner.name] = (roundRobinScores[winner.name] || 0) + 1;
+        recordTags(winner);
+        winner._path = winner._path || [];
+        winner._path.push({ round: `三強循環`, opponent: loser.name, isBye: false });
+
+        completedMatches++;
+        roundRobinIdx++;
+        prepareMatch();
+        return;
+      }
+
+      if (finalMode === 'four' && isBronzeMatch) {
+        const winner = selectedIndex === 0 ? semiLosers[0] : semiLosers[1];
+        const loser = selectedIndex === 0 ? semiLosers[1] : semiLosers[0];
+        winner._rank = 3;
+        loser._rank = 4;
+        recordTags(winner);
+        completedMatches++;
+
+        isBronzeMatch = false;
+        isFinalMatch = true;
+        prepareMatch();
+        return;
+      }
+
+      if (finalMode === 'four' && isFinalMatch) {
+        const winner = selectedIndex === 0 ? finalistA : finalistB;
+        const loser = selectedIndex === 0 ? finalistB : finalistA;
+        winner._rank = 1;
+        loser._rank = 2;
+        recordTags(winner);
+
+        winner._path = winner._path || [];
+        winner._path.push({ round: "冠軍賽", opponent: loser.name, isBye: false });
+
+        completedMatches++;
+        isFinalMatch = false;
+        finishFourTournament(winner, loser);
+        return;
+      }
+
+      const pair = currentPairs[pairIndex];
+      const winner = selectedIndex === 0 ? pair[0] : pair[1];
+      const loser = selectedIndex === 0 ? pair[1] : pair[0];
+
+      recordTags(winner);
+
+      winner._path = winner._path || [];
+      winner._path.push({ round: `第 ${roundNumber} 輪`, opponent: loser.name, isBye: false });
+
+      if (finalMode === 'four') {
+        semiLosers.push(loser);
+      }
+
+      nextRoundCandidates.push(winner);
+      completedMatches++;
+      pairIndex++;
+      prepareMatch();
+    }
+
+    function recordTags(item) {
+      if (!item || !item.tags) return;
+      item.tags.forEach(t => {
+        tagStats[t] = (tagStats[t] || 0) + 1;
+      });
+    }
+
+    function updateMetaDisplay() {
+      let remainingCount = 0;
+      if (finalMode === 'three') {
+        remainingCount = 3 - roundRobinIdx;
+      } else if (isBronzeMatch || isFinalMatch) {
+        remainingCount = 2;
+      } else {
+        remainingCount = (currentPairs.length - pairIndex) * 2 + nextRoundCandidates.length;
+      }
+
+      document.getElementById('metaRemain').textContent = Math.max(1, remainingCount);
+      document.getElementById('metaDone').textContent = completedMatches;
+      document.getElementById('metaTotalMatches').textContent = totalMatchesNeeded;
+
+      const pct = Math.min(100, Math.round((completedMatches / totalMatchesNeeded) * 100));
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    function finishThreeTournament() {
+      const sorted = [...roundRobinItems].sort((a, b) => {
+        const scoreA = roundRobinScores[a.name] || 0;
+        const scoreB = roundRobinScores[b.name] || 0;
+        return scoreB - scoreA;
+      });
+
+      finalRankings = [
+        { rank: 1, label: '👑 冠軍', item: sorted[0] },
+        { rank: 2, label: '🥈 亞軍', item: sorted[1] },
+        { rank: 3, label: '🥉 季軍', item: sorted[2] }
+      ];
+
+      finishTournamentDisplay();
+    }
+
+    function finishFourTournament(champion, runnerUp) {
+      const rank3 = semiLosers.find(x => x._rank === 3) || semiLosers[0];
+      const rank4 = semiLosers.find(x => x._rank === 4) || semiLosers[1];
+
+      finalRankings = [
+        { rank: 1, label: '👑 冠軍', item: champion },
+        { rank: 2, label: '🥈 亞軍', item: runnerUp },
+        { rank: 3, label: '🥉 季軍', item: rank3 },
+        { rank: 4, label: '🌸 殿軍', item: rank4 }
+      ];
+
+      finishTournamentDisplay();
+    }
+
+    function finishTournamentDisplay() {
+      try {
+        document.getElementById('gameView').style.display = 'none';
+        document.getElementById('resultView').classList.add('show');
+
+        const champ = finalRankings[0]?.item || { name: '未知', desc: '', tags: [], _path: [] };
+
+        // 1. 冠軍卡片
+        document.getElementById('resChampName').textContent = champ.name;
+        document.getElementById('resChampDesc').textContent = champ.desc || '';
+
+        const champTagsContainer = document.getElementById('resChampTags');
+        champTagsContainer.innerHTML = '';
+        (champ.tags || []).forEach(t => {
+          const s = document.createElement('span');
+          s.className = `tag-badge ${getTagColorClass(t)}`;
+          s.textContent = t;
+          champTagsContainer.appendChild(s);
+        });
+
+        // 冠軍下方依照 頂層(亞軍)、中層(季軍)、底層(殿軍) 堆疊橫條排列展示
+        const podiumContainer = document.getElementById('resPodiumContainer');
+        podiumContainer.innerHTML = '';
+        finalRankings.slice(1).forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'podium-item';
+          div.innerHTML = `
+            <div class="podium-left">
+              <span class="podium-tag">${r.label}</span>
+              <span class="podium-name">${r.item?.name || '無'}</span>
+            </div>
+            <div class="podium-desc">${r.item?.desc || ''}</div>
+          `;
+          podiumContainer.appendChild(div);
+        });
+
+        // 2. XP DNA 標籤統計
+        const dnaContainer = document.getElementById('dnaListContainer');
+        dnaContainer.innerHTML = '';
+
+        let totalTagPicks = 0;
+        Object.values(tagStats).forEach(c => { totalTagPicks += c; });
+
+        const sortedTags = Object.entries(tagStats).sort((a, b) => b[1] - a[1]);
+        const maxCount = sortedTags.length > 0 ? sortedTags[0][1] : 1;
+
+        if (sortedTags.length === 0) {
+          dnaContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">本輪無標籤數據</div>';
+        } else {
+          sortedTags.slice(0, 9).forEach(([tag, count], idx) => {
+            const pct = Math.round((count / (totalTagPicks || 1)) * 100);
+            const fillWidth = Math.round((count / maxCount) * 100);
+            const color = DNA_BAR_COLORS[idx % DNA_BAR_COLORS.length];
+
+            const row = document.createElement('div');
+            row.className = 'dna-row';
+            row.innerHTML = `
+              <div class="dna-label">${tag}</div>
+              <div class="dna-track">
+                <div class="dna-fill" style="width: ${fillWidth}%; background-color: ${color};"></div>
+              </div>
+              <div class="dna-val">${pct}%</div>
+            `;
+            dnaContainer.appendChild(row);
+          });
+        }
+        document.getElementById('dnaFooterText').textContent = `基於全部 ${completedMatches} 次選擇統計`;
+
+        // 3. 決賽名單 (三強或四強) 明確獨立卡片
+        const cardsTitle = document.getElementById('resTopRanksTitle');
+        cardsTitle.textContent = finalRankings.length === 3 ? "🧬 三強名單 & 偏好洞察" : "🧬 四強名單 & 偏好洞察";
+
+        const cardsContainer = document.getElementById('topRanksCardsContainer');
+        cardsContainer.innerHTML = '';
+
+        finalRankings.forEach(r => {
+          const card = document.createElement('div');
+          card.className = 'rank-mini-card';
+          
+          const tagsHtml = (r.item?.tags || []).map(t => `<span class="tag-badge ${getTagColorClass(t)}" style="font-size:0.65rem; padding:2px 6px;">${t}</span>`).join(' ');
+
+          card.innerHTML = `
+            <div class="rank-mini-badge">${r.label}</div>
+            <div class="rank-mini-name">${r.item?.name || '無'}</div>
+            <div class="rank-mini-desc">${r.item?.desc || ''}</div>
+            <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px;">${tagsHtml}</div>
+          `;
+          cardsContainer.appendChild(card);
+        });
+
+        const topTag = sortedTags.length > 0 ? sortedTags[0][0] : '多元';
+        const secondTag = sortedTags.length > 1 ? sortedTags[1][0] : '隨性';
+        document.getElementById('resInsightText').textContent = 
+          `你的決賽陣容在「${topTag}」與「${secondTag}」之間展現出極強的傾向性。你特別偏好兼具宿命感與細膩張力的感情模式，什麼都吃但內心有明確的白月光標竿。`;
+
+        // 4. 一句語畫像
+        const portraitPresets = [
+          `你信宿命，也信宿命會傷人。最戳你的是「明明命中注定卻無法在一起」的悲劇美感——越痛苦，越刻骨銘心。`,
+          `看似追求安穩與平靜，骨子裡卻最吃「至死不渝的偏執與唯一」。你的愛恨界限極其鮮明，唯有真心能破萬防。`,
+          `你喜歡克制隱忍中的瘋狂暗湧，哪怕隔著萬水千山與世俗阻隔，一眼對望即是萬年沉淪。`
+        ];
+        document.getElementById('resPortraitText').textContent = portraitPresets[Math.floor(Math.random() * portraitPresets.length)];
+
+        // 5. 冠軍晉級之路
+        const pathContainer = document.getElementById('championPathList');
+        pathContainer.innerHTML = '';
+        const pathArr = champ._path || [];
+        pathArr.forEach(step => {
+          const row = document.createElement('div');
+          row.className = 'path-row';
+          if (step.isBye) {
+            row.innerHTML = `<span>${step.round} 🎟️ 輪空晉級</span><span class="win">勝</span>`;
+          } else {
+            row.innerHTML = `<span>${step.round} vs ${step.opponent}</span><span class="win">勝</span>`;
+          }
+          pathContainer.appendChild(row);
+        });
+
+        const finalChampRow = document.createElement('div');
+        finalChampRow.className = 'path-row';
+        finalChampRow.style.marginTop = '4px';
+        finalChampRow.innerHTML = `<span style="color:#fbbf24; font-weight:700;">🏆 冠軍：${champ.name}</span>`;
+        pathContainer.appendChild(finalChampRow);
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        console.error("結算面板渲染錯誤:", err);
+      }
+    }
+
+    function restartTournament() {
+      initTournament();
+    }
+
+    /* 後台管理標籤選單庫 */
+    function renderTagCheckboxList(containerId, selectedTags = []) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      availableTags.forEach(tag => {
+        const isChecked = selectedTags.includes(tag) ? 'checked' : '';
+        const label = document.createElement('label');
+        label.className = 'tag-check-item';
+        label.innerHTML = `<input type="checkbox" value="${tag}" ${isChecked}><span>${tag}</span>`;
+        container.appendChild(label);
+      });
+    }
+
+    function addNewGlobalTag(checkboxContainerId, inputId) {
+      const input = document.getElementById(inputId);
+      const val = input.value.trim();
+      if (!val) return;
+      if (!availableTags.includes(val)) {
+        availableTags.push(val);
+        saveTags();
+      }
+      input.value = '';
+      const checkedBoxes = Array.from(document.querySelectorAll(`#${checkboxContainerId} input:checked`)).map(c => c.value);
+      if (!checkedBoxes.includes(val)) checkedBoxes.push(val);
+      renderTagCheckboxList(checkboxContainerId, checkedBoxes);
+    }
+
+    function getSelectedTagsFromContainer(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(c => c.value);
+    }
+
+    function renderAdminList() {
+      document.getElementById('adminCount').textContent = currentPool.length;
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+
+      currentPool.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        const tags = (item.tags || []).map(t => `<span class="tag-badge ${getTagColorClass(t)}" style="display:inline-block; margin-right:3px;">${t}</span>`).join('');
+
+        tr.innerHTML = `
+          <td style="font-weight:700;">${item.name}</td>
+          <td style="color:var(--text-sub); font-size:0.84rem;">${item.desc || '-'}</td>
+          <td>${tags}</td>
+          <td style="text-align:right; white-space:nowrap;">
+            <button class="btn-action-table btn-edit" onclick="openEditModal(${index})">編輯</button>
+            <button class="btn-action-table btn-del" onclick="deleteAdminItem(${index})">刪除</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addNewItem() {
+      const name = document.getElementById('newName').value.trim();
+      const desc = document.getElementById('newDesc').value.trim();
+      const tags = getSelectedTagsFromContainer('adminTagCheckboxes');
+      if (!name) return alert('請輸入名稱！');
+
+      currentPool.unshift({ name, desc, tags });
+      savePool();
+      document.getElementById('newName').value = '';
+      document.getElementById('newDesc').value = '';
+      renderTagCheckboxList('adminTagCheckboxes');
+      renderAdminList();
+      updateStartViewMeta();
+    }
+
+    function deleteAdminItem(index) {
+      if (currentPool.length <= 4) return alert('請至少保留 4 個項目以進行決賽！');
+      currentPool.splice(index, 1);
+      savePool();
+      renderAdminList();
+      updateStartViewMeta();
+    }
+
+    function openEditModal(index) {
+      editingItemIdx = index;
+      const item = currentPool[index];
+      document.getElementById('editName').value = item.name;
+      document.getElementById('editDesc').value = item.desc || '';
+      renderTagCheckboxList('editTagCheckboxes', item.tags || []);
+      document.getElementById('editModal').classList.add('show');
+    }
+
+    function closeEditModal() {
+      editingItemIdx = -1;
+      document.getElementById('editModal').classList.remove('show');
+    }
+
+    function saveEditItem() {
+      if (editingItemIdx === -1) return;
+      const name = document.getElementById('editName').value.trim();
+      const desc = document.getElementById('editDesc').value.trim();
+      const tags = getSelectedTagsFromContainer('editTagCheckboxes');
+      if (!name) return alert('名稱不可為空！');
+
+      currentPool[editingItemIdx] = { name, desc, tags };
+      savePool();
+      closeEditModal();
+      renderAdminList();
+    }
+
+    function restoreDefaultData() {
+      if (!confirm('確定要還原成預設題庫嗎？')) return;
+      currentPool = [...DEFAULT_XP_LIST];
+      availableTags = [...DEFAULT_AVAILABLE_TAGS];
+      savePool();
+      saveTags();
+      renderAdminList();
+      renderTagCheckboxList('adminTagCheckboxes');
+      updateStartViewMeta();
+    }
+
+    /* 匯入與匯出功能 (附帶自訂檔名規範) */
+    function getFormattedTimestamp() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      return `${yyyy}${mm}${dd}_${hh}${min}${ss}`;
+    }
+
+    function exportDataJSON() {
+      const allDistinctTags = Array.from(new Set([
+        ...availableTags,
+        ...currentPool.flatMap(item => item.tags || [])
+      ]));
+
+      const exportObj = {
+        type: "full_backup",
+        version: "xp_tournament_v15",
+        exportTime: new Date().toISOString(),
+        totalItems: currentPool.length,
+        totalTags: allDistinctTags.length,
+        tags: allDistinctTags,
+        availableTags: allDistinctTags,
+        pool: currentPool
+      };
+
+      const ts = getFormattedTimestamp();
+      downloadJsonFile(exportObj, `同人女XP錦標賽_題庫備份_${ts}.json`);
+    }
+
+    function exportOnlyTagsJSON() {
+      const allDistinctTags = Array.from(new Set([
+        ...availableTags,
+        ...currentPool.flatMap(item => item.tags || [])
+      ]));
+
+      const exportObj = {
+        type: "tags_only",
+        exportTime: new Date().toISOString(),
+        totalTags: allDistinctTags.length,
+        tags: allDistinctTags
+      };
+
+      const ts = getFormattedTimestamp();
+      downloadJsonFile(exportObj, `同人女XP錦標賽_標籤庫_${ts}.json`);
+    }
+
+    function downloadJsonFile(obj, filename) {
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = url;
+      downloadAnchor.download = filename;
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      document.body.removeChild(downloadAnchor);
+      URL.revokeObjectURL(url);
+    }
+
+    function handleImportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const rawData = JSON.parse(e.target.result);
+          let rawPool = null;
+          let rawTags = null;
+
+          if (Array.isArray(rawData)) {
+            rawPool = rawData;
+          } else if (rawData && typeof rawData === 'object') {
+            rawPool = rawData.pool || rawData.items || rawData.list || rawData.data || rawData.XPList;
+            rawTags = rawData.availableTags || rawData.tags || rawData.tagList;
+
+            if (!rawPool && Array.isArray(rawData.tags) && rawData.tags.every(t => typeof t === 'string')) {
+              rawTags = rawData.tags;
+            }
+          }
+
+          if ((!rawPool || rawPool.length === 0) && Array.isArray(rawTags) && rawTags.length > 0) {
+            availableTags = Array.from(new Set([...availableTags, ...rawTags]));
+            saveTags();
+            renderTagCheckboxList('adminTagCheckboxes');
+            alert(`成功匯入並合併 ${rawTags.length} 個標籤！`);
+            return;
+          }
+
+          if (!Array.isArray(rawPool)) {
+            alert('匯入失敗：找不到有效的題庫資料陣列，請檢查 JSON 結構！');
+            return;
+          }
+
+          const standardizedPool = rawPool.map(item => {
+            const name = item.name || item.title || item.text || item[0] || '未命名XP';
+            const desc = item.desc || item.description || item.info || item.subtitle || item[1] || '';
+            let tags = item.tags || item.labels || item.categories || item[2] || [];
+            
+            if (typeof tags === 'string') {
+              tags = tags.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+            } else if (!Array.isArray(tags)) {
+              tags = [];
+            }
+
+            return {
+              name: String(name).trim(),
+              desc: String(desc).trim(),
+              tags: tags.map(t => String(t).trim()).filter(Boolean)
+            };
+          }).filter(item => item.name !== '');
+
+          if (standardizedPool.length < 3) {
+            alert('匯入失敗：題庫有效項目少於 3 項！');
+            return;
+          }
+
+          currentPool = standardizedPool;
+
+          if (Array.isArray(rawTags)) {
+            availableTags = Array.from(new Set([...availableTags, ...rawTags]));
+          }
+          const extractedTags = currentPool.flatMap(i => i.tags || []);
+          availableTags = Array.from(new Set([...availableTags, ...extractedTags]));
+
+          savePool();
+          saveTags();
+          renderAdminList();
+          renderTagCheckboxList('adminTagCheckboxes');
+          updateStartViewMeta();
+          alert(`成功匯入 ${currentPool.length} 個題目及對應標籤！`);
+        } catch (err) {
+          console.error(err);
+          alert('解析 JSON 檔案失敗，請確保檔案為正確的 UTF-8 編碼 JSON 格式！');
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+      event.target.value = '';
+    }
+
+    // 預設進入首頁
+    updateStartViewMeta();
+  </script>
+</body>
+</html>

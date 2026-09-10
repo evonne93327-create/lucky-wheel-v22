@@ -1,0 +1,24 @@
+{
+  "type": "wheel_colors_single",
+  "title": "同人女詞牌名",
+  "darkPalette": [
+    "#F2D539",
+    "#DECA3D",
+    "#CBBF40",
+    "#B7B444",
+    "#A3AA47",
+    "#8F9F4B",
+    "#7C944E",
+    "#688952"
+  ],
+  "lightPalette": [
+    "#F5E06A",
+    "#E6D76E",
+    "#D8CF70",
+    "#C9C773",
+    "#BABF75",
+    "#ABB778",
+    "#9DAF7A",
+    "#8EA67D"
+  ]
+}

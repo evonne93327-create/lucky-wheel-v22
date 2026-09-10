@@ -1,0 +1,151 @@
+{
+  "type": "wheel_colors_all",
+  "wheelsColors": [
+    {
+      "id": "default_xp",
+      "title": "命題作文",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8"
+      ]
+    },
+    {
+      "id": "wheel_1788694569842",
+      "title": "人物關係",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8"
+      ]
+    },
+    {
+      "id": "wheel_1788694742354",
+      "title": "人物性格",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8"
+      ]
+    },
+    {
+      "id": "wheel_1788705792081",
+      "title": "石頭",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8"
+      ]
+    },
+    {
+      "id": "wheel_1788713506880",
+      "title": "詞牌名",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8"
+      ]
+    },
+    {
+      "id": "wheel_1788755540481",
+      "title": "同人女詞牌名",
+      "darkPalette": [
+        "#EC4899",
+        "#8B5CF6",
+        "#F43F5E",
+        "#A855F7",
+        "#DB2777",
+        "#7C3AED",
+        "#FB7185",
+        "#6366F1"
+      ],
+      "lightPalette": [
+        "#F472B6",
+        "#A78BFA",
+        "#FB7185",
+        "#C084FC",
+        "#F43F5E",
+        "#8B5CF6",
+        "#FDA4AF",
+        "#818CF8",
+        "#5D0643",
+        "#BA95BE"
+      ]
+    }
+  ]
+}

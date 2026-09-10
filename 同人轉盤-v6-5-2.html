@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>同人女 XP 命運轉盤</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #121214;
+      --card-bg: #1e1e24;
+      --card-hover: #26262e;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --primary-light: #a78bfa;
+      --accent: #ec4899;
+      --accent-hover: #db2777;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --text-muted: #6b7280;
+      --border-card: #2e2e38;
+      --bar-bg: #272730;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans TC", sans-serif; user-select: none; }
+    html { overflow-y: scroll; }
+    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+
+    main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 48px; }
+    .view-content { width: 100%; max-width: 620px; }
+
+    .header-area { text-align: center; margin-bottom: 20px; width: 100%; }
+    .title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: #ffffff; letter-spacing: 1px; }
+    .subtitle { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 16px; }
+
+    .wheel-selector-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .wheel-select-dropdown {
+      background: var(--card-bg);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      font-weight: 600;
+      max-width: 240px;
+    }
+    #wheelSelect {
+      text-align: center;
+      text-align-last: center;
+      width: auto;
+    }
+    #wheelSelect option { text-align: center; }
+    .wheel-select-dropdown:focus { border-color: var(--primary); }
+
+    .wheel-wrapper {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      margin: 0 auto 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 440px) {
+      .wheel-wrapper { width: 380px; height: 380px; }
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45), 0 0 0 5px var(--border-card);
+      transition: transform 4s cubic-bezier(0.12, 0.8, 0.18, 1);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 36px;
+      z-index: 10;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+    }
+    .wheel-pointer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 26px solid #fbbf24;
+    }
+
+    .wheel-center-cap {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--card-bg), #2d2d38);
+      border: 3px solid var(--border-card);
+      border-radius: 50%;
+      z-index: 5;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .btn-spin {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      border: none;
+      color: #fff;
+      padding: 14px 44px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(236, 72, 153, 0.35);
+      transition: all 0.25s ease;
+      display: block;
+      margin: 0 auto;
+    }
+    .btn-spin:hover:not(:disabled) {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(236, 72, 153, 0.45);
+    }
+    .btn-spin:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .checkbox-label:hover { color: var(--text-main); }
+    .checkbox-label input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+    }
+
+    .admin-entry-btn {
+      background: transparent;
+      border: 1px solid #282832;
+      border-radius: 999px;
+      color: #71717a;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 7px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 28px;
+    }
+    .admin-entry-btn:hover {
+      color: #a1a1aa;
+      border-color: #3f3f4e;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .admin-view { display: none; width: 100%; max-width: 620px; }
+    .admin-view.show { display: block; }
+    .admin-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    .admin-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .admin-section-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+
+    .admin-input, .admin-textarea {
+      width: 100%;
+      background: #17171c;
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+      margin-bottom: 10px;
+      user-select: text;
+    }
+    .admin-input:focus, .admin-textarea:focus { border-color: var(--primary); }
+    .admin-textarea { min-height: 120px; resize: vertical; line-height: 1.5; font-family: monospace; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+    .btn-accent:hover { background: var(--accent-hover); }
+    
+    .btn-gray {
+      flex: 1;
+      background: #4b5563;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.2s;
+    }
+    .btn-gray:hover { background: #6b7280; }
+
+    .btn-danger {
+      flex: 1;
+      background: #7f1d1d;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.2s;
+    }
+    .btn-danger:hover { background: #991b1b; }
+
+    .btn-sm-del {
+      background: none;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+    .btn-sm-del:hover { background: rgba(239, 68, 68, 0.12); }
+
+    .btn-sm-edit {
+      background: none;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: var(--primary-light);
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+    .btn-sm-edit:hover { background: rgba(139, 92, 246, 0.12); }
+
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+    .data-table th, .data-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border-card);
+      font-size: 0.86rem;
+      text-align: left;
+      word-wrap: break-word;
+    }
+    .data-table th { color: var(--text-muted); font-size: 0.8rem; }
+
+    .row-hidden { opacity: 0.45; }
+    .row-hidden td.item-name { text-decoration: line-through; }
+
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(5px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 200; padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; }
+    
+    .result-modal-box {
+      background: radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.16), transparent 75%), var(--card-bg);
+      border: 1.5px solid rgba(236, 72, 153, 0.45);
+      border-radius: 24px;
+      padding: 30px 24px;
+      width: 100%;
+      max-width: 440px;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+      text-align: center;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+      animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .result-icon { font-size: 3rem; margin-bottom: 12px; }
+    .result-name { 
+      font-size: 1.7rem; 
+      font-weight: 800; 
+      color: #fff; 
+      margin-bottom: 12px; 
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+    .result-desc {
+      font-size: 0.95rem;
+      color: #fce7f3;
+      line-height: 1.6;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border-card);
+      margin-bottom: 22px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div id="frontView" class="view-content" style="display: flex; flex-direction: column; align-items: center;">
+      <div class="header-area">
+        <h1 class="title">同人女 XP 命運轉盤</h1>
+        <div class="subtitle">轉動命運的輪盤，抽出此刻的靈魂共鳴</div>
+        
+        <div class="wheel-selector-bar">
+          <select id="wheelSelect" class="wheel-select-dropdown" onchange="onWheelSelectChange()"></select>
+        </div>
+      </div>
+
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="800" height="800"></canvas>
+        <div class="wheel-center-cap">🔮</div>
+      </div>
+
+      <button id="spinBtn" class="btn-spin" onclick="spinWheel()">旋轉命運</button>
+      
+      <label class="checkbox-label">
+        <input type="checkbox" id="autoHideCheckbox" onchange="saveAppConfig()">
+        抽出後自動隱藏該項目
+      </label>
+
+      <div>
+        <button class="admin-entry-btn" onclick="openAdminView()">後台管理與題庫編輯</button>
+      </div>
+    </div>
+
+    <div id="adminView" class="admin-view">
+      <div class="admin-card">
+        <div class="admin-title-bar">
+          <h2 style="font-size: 1.2rem; font-weight:800; color:#fff;">轉盤後台管理</h2>
+          <button class="admin-entry-btn" style="margin-top:0;" onclick="closeAdminView()">返回轉盤</button>
+        </div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; background: #17171c; padding: 12px; border-radius: 12px; border: 1px solid var(--border-card);">
+  <select id="adminWheelSelect" class="wheel-select-dropdown" style="padding: 6px 10px; font-size: 0.85rem; width: 100%; max-width: none;" onchange="onAdminWheelSelectChange()"></select>
+  <div style="display: flex; gap: 8px;">
+    <button class="btn-gray" style="padding:4px 10px; font-size:0.75rem;" onclick="promptCreateWheel()">新增轉盤</button>
+    <button class="btn-gray" style="padding:4px 10px; font-size:0.75rem;" onclick="renameCurrentWheel()">重新命名</button>
+    <button id="btnDeleteWheel" class="btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="deleteCurrentWheel()">刪除此轉盤</button>
+  </div>
+</div>
+
+        <div class="admin-section-title">➕ 單筆新增項目</div>
+        <input type="text" id="singleName" class="admin-input" placeholder="名稱（必填，例如：破鏡重圓）">
+        <input type="text" id="singleDesc" class="admin-input" placeholder="描述（選填，可留空）">
+        <button class="btn-primary" style="width: 100%; margin-bottom: 22px;" onclick="addSingleItem()">新增項目</button>
+
+        <div class="admin-section-title">📑 文字批量匯入項目</div>
+        <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 6px; line-height: 1.4;">
+          格式規範：支援兩種寫法，可混用。<br>①「名稱 描述」寫在同一行，中間用空白分隔（沒有空白則整行皆為名稱）；<br>②「名稱」和「描述」分兩行寫，中間用「空行」跟其他項目隔開。
+        </div>
+        <textarea id="batchText" class="admin-textarea" placeholder="破鏡重圓 分開後又複合&#10;&#10;聖人私心&#10;為一人甘願跌落神壇&#10;&#10;年上"></textarea>
+        <button class="btn-primary" style="width: 100%; margin-bottom: 24px;" onclick="addBatchItems()">解析並匯入</button>
+
+        <div style="margin-bottom: 10px;">
+          <div class="admin-section-title" style="margin-bottom:6px;">📜 現有項目列表 (<span id="adminItemCount">0</span>)</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">打勾代表顯示在轉盤上</div>
+        </div>
+
+        <div style="max-height: 380px; overflow-y: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align:center;">顯示</th>
+                <th style="width: 35%;">名稱</th>
+                <th>描述</th>
+                <th style="width: 64px; text-align:right;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="btn-gray" style="padding:4px 10px; font-size:0.75rem;" onclick="unhideAllCurrentWheel()">解除所有隱藏</button>
+          <button class="btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="clearCurrentWheelItems()">清空全部</button>
+        </div>
+        
+        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">💾 JSON / TXT 檔案  匯入 / 匯出</div>
+          <div style="font-size: 0.78rem; color: var(--text-sub); margin-bottom: 10px; line-height: 1.4;">
+            TXT 格式規範：支援兩種寫法，可混用。<br>①「名稱 描述」寫在同一行，中間用空白分隔（沒有空白則整行皆為名稱）；<br>②「名稱」和「描述」分兩行寫，中間用「空行」跟其他項目隔開。<br>預設會建立成一個新轉盤，若勾選下方選項則會加入目前所選的轉盤。
+          </div>
+          <input type="file" id="importJsonInput" accept=".json,.txt" style="display:none;" onchange="handleImportFile(event)">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <button class="btn-primary" 
+              style="width: 100%;" 
+              onclick="document.getElementById('importJsonInput').click()">＋ 從 JSON / TXT 匯入</button>
+              <label class="checkbox-label" style="margin-top: 10px; font-size: 0.82rem;">
+                <input type="checkbox" id="txtImportMergeCurrent">
+                TXT 匯入時加入目前所選轉盤（不勾選則建立為新轉盤）
+              </label>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-gray" style="flex:1; border-radius:10px; padding:9px 18px; font-size:0.88rem;" onclick="exportCurrentWheel()">匯出當前轉盤</button>
+              <button class="btn-gray" style="flex:1; border-radius:10px; padding:9px 18px; font-size:0.88rem;" onclick="exportAllWheels()">匯出所有轉盤</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div id="resultModal" class="modal-backdrop">
+    <div class="result-modal-box">
+      <div class="result-icon">✨</div>
+      <div class="result-name" id="modalResultName">項目名稱</div>
+      <div class="result-desc" id="modalResultDesc">項目描述</div>
+      <button class="btn-spin" style="padding: 10px 32px; font-size: 1rem;" onclick="closeResultModal()">確認收下</button>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_XP_POOL = [
+      { name: "陰陽兩隔", desc: "此生訣別餘生難忘" },
+      { name: "契約戀愛", desc: "本是各取所需卻情難自已" },
+      { name: "養成", desc: "陪你長大也陪你墜入愛河" },
+      { name: "白月光與硃砂痣", desc: "一個求而不得，一個愛而不捨" },
+      { name: "情敵變情人", desc: "你的品味不錯嘛" },
+      { name: "破鏡難圓", desc: "緣分未盡卻已面目全非" },
+      { name: "雙向暗戀", desc: "心意相通，卻始終無人戳破" },
+      { name: "金絲雀", desc: "你是我的珍寶，也是我的囚徒" },
+      { name: "無間道", desc: "我的敵人也是我唯一的知己" },
+      { name: "雙向奔赴", desc: "你向我奔赴，我亦步步向你" },
+      { name: "病嬌", desc: "予你愛意，也予你枷鎖" },
+      { name: "老房子著火", desc: "多年心如止水，偏為你起了波瀾" },
+      { name: "Soul mate", desc: "靈魂共振的夥伴" },
+      { name: "真相是真", desc: "密而不宣的愛情" },
+      { name: "草莓煙", desc: "成年與未成年不可言說的秘密" },
+      { name: "夏令營效應", desc: "相遇於盛夏，卻終究走回各自人生。" },
+      { name: "死遁", desc: "假死/真死來成全對方" },
+      { name: "枯木逢春", desc: "冷漠之人終被融化" },
+      { name: "破鏡重圓", desc: "分開後又複合" },
+      { name: "老夫老妻", desc: "細水長流式感情" },
+      { name: "爛人真心", desc: "滿身劣跡卻唯獨對你真摯" },
+      { name: "聖人私心", desc: "為一人甘願跌落神壇" },
+      { name: "恨海情天", desc: "愛恨交織，至死方休" },
+      { name: "鏡花水月", desc: "看似觸手可及的幻象悲劇" },
+      { name: "明月高懸", desc: "可望而不可即的高嶺之花" },
+      { name: "歡喜冤家", desc: "見面互懟，背地牽掛" },
+      { name: "宿敵變摯友", desc: "從不死不休到背靠背作戰" },
+      { name: "摯友變宿敵", desc: "信仰相悖，親手割袍斷義" },
+      { name: "相愛相殺", desc: "博弈對峙，互為軟肋亦是利刃" },
+      { name: "師徒", desc: "綱常倫理下的不可言說" },
+      { name: "骨科", desc: "同根共生的血脈深淵" },
+      { name: "偽骨科", desc: "同一屋簷下的曖昧潮湧" },
+      { name: "愛而不得", desc: "耗盡半生終究隔海相望" },
+      { name: "先婚後愛", desc: "從利益搭夥到假戲真做" },
+      { name: "強制愛", desc: "斬斷所有退路的禁錮與掌控" },
+      { name: "默默守護", desc: "不求回應的退後一步" },
+      { name: "青梅竹馬", desc: "刻進成長骨髓的陪伴" },
+      { name: "天降", desc: "蠻橫撞進平靜生活的流星" },
+      { name: "年上", desc: "掌控感與游刃有餘的引領" },
+      { name: "年下", desc: "直球追擊與隱忍的野心" },
+      { name: "救贖", desc: "將你拉出無光泥沼的唯一光芒" },
+      { name: "一起腐爛", desc: "不求光明，只求與你同沉深淵" },
+      { name: "暗戀", desc: "一人兵荒馬亂的秘密花園" },
+      { name: "明戀", desc: "人盡皆知的坦蕩與赤誠" },
+      { name: "雙強", desc: "勢均力敵，王座並肩" },
+      { name: "霸總嬌妻", desc: "絕對財力與絕對專寵" },
+      { name: "追妻火葬場", desc: "曾棄之如履，今卑微求渡" },
+      { name: "追夫火葬場", desc: "幡然醒悟後的挽留與彌補" },
+      { name: "對抗路", desc: "寸土必爭，針鋒相對的火花" },
+      { name: "露水姻緣", desc: "清醒著沉淪的成年人限定" },
+      { name: "白頭偕老", desc: "歲月沉澱後的共赴白首" },
+      { name: "日久生情", desc: "不知不覺間已依賴入骨" },
+      { name: "一見鍾情", desc: "回眸一眼即是萬年沉淪" },
+      { name: "君臣", desc: "社稷江山下的君臣之禮" },
+      { name: "主僕", desc: "身份懸殊下的唯命是從" },
+      { name: "前世今生", desc: "孟婆湯洗不掉的靈魂印記" },
+      { name: "錯位時空", desc: "我身在未來，你留在過去" },
+      { name: "蘭因絮果", desc: "花開燦爛，落絮荒涼" },
+      { name: "莞莞類卿", desc: "透過你看向另一個影子" },
+      { name: "明媒正娶", desc: "鳳冠霞帔，天下共證" },
+      { name: "地下情", desc: "無人知曉的幽暗微光" }
+    ];
+
+    const SLICE_PALETTE = [
+      '#ec4899', '#8b5cf6', '#f43f5e', '#a855f7', 
+      '#db2777', '#7c3aed', '#fb7185', '#6366f1'
+    ];
+
+    let wheelsData = JSON.parse(localStorage.getItem('xp_wheels_store_v1')) || [
+      { id: 'default_xp', title: '同人女 XP 題庫', items: DEFAULT_XP_POOL }
+    ];
+    let activeWheelId = localStorage.getItem('xp_active_wheel_id') || wheelsData[0].id;
+    let autoHideConfig = localStorage.getItem('xp_auto_hide_v1') === 'true';
+
+    let isSpinning = false;
+    let currentDegree = 0;
+
+    function getActiveWheel() {
+      return wheelsData.find(w => w.id === activeWheelId) || wheelsData[0];
+    }
+
+    function saveWheels() {
+      localStorage.setItem('xp_wheels_store_v1', JSON.stringify(wheelsData));
+      localStorage.setItem('xp_active_wheel_id', activeWheelId);
+    }
+    
+    function saveAppConfig() {
+      const isChecked = document.getElementById('autoHideCheckbox').checked;
+      localStorage.setItem('xp_auto_hide_v1', isChecked);
+    }
+
+    document.getElementById('autoHideCheckbox').checked = autoHideConfig;
+
+    function updateWheelSelect() {
+      const frontSelect = document.getElementById('wheelSelect');
+      const adminSelect = document.getElementById('adminWheelSelect');
+      
+      frontSelect.innerHTML = '';
+      if (adminSelect) adminSelect.innerHTML = '';
+
+      wheelsData.forEach(w => {
+        const activeItemsCount = w.items.filter(i => !i.hidden).length;
+        const totalItemsCount = w.items.length;
+        const countText = totalItemsCount === activeItemsCount ? `${totalItemsCount}` : `${activeItemsCount}/${totalItemsCount}`;
+
+        const opt1 = document.createElement('option');
+        opt1.value = w.id;
+        opt1.textContent = `${w.title} (${countText})`;
+        if (w.id === activeWheelId) opt1.selected = true;
+        frontSelect.appendChild(opt1);
+
+        if (adminSelect) {
+          const opt2 = document.createElement('option');
+          opt2.value = w.id;
+          opt2.textContent = `${w.title} (${totalItemsCount})`;
+          if (w.id === activeWheelId) opt2.selected = true;
+          adminSelect.appendChild(opt2);
+        }
+      });
+      document.getElementById('btnDeleteWheel').style.display = wheelsData.length > 1 ? 'inline-block' : 'none';
+    }
+
+    function onWheelSelectChange() {
+      activeWheelId = document.getElementById('wheelSelect').value;
+      saveWheels();
+      drawWheel();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function onAdminWheelSelectChange() {
+      activeWheelId = document.getElementById('adminWheelSelect').value;
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function promptCreateWheel() {
+      const name = prompt('請輸入新轉盤名稱：', '自訂 XP 轉盤');
+      if (!name || !name.trim()) return;
+      const newId = 'wheel_' + Date.now();
+      wheelsData.push({
+        id: newId,
+        title: name.trim(),
+        items: []
+      });
+      activeWheelId = newId;
+      saveWheels();
+      updateWheelSelect();
+      drawWheel();
+      renderAdminList();
+    }
+
+    function renameCurrentWheel() {
+      const wheel = getActiveWheel();
+      const newName = prompt('請輸入新的轉盤名稱：', wheel.title);
+      if (newName === null) return;
+      if (!newName.trim()) return alert('轉盤名稱不能為空！');
+
+      wheel.title = newName.trim();
+      saveWheels();
+      updateWheelSelect();
+    }
+
+    function deleteCurrentWheel() {
+      if (wheelsData.length <= 1) return alert('至少需保留一個轉盤！');
+      if (!confirm(`確定刪除轉盤「${getActiveWheel().title}」嗎？`)) return;
+
+      wheelsData = wheelsData.filter(w => w.id !== activeWheelId);
+      activeWheelId = wheelsData[0].id;
+      saveWheels();
+      updateWheelSelect();
+      drawWheel();
+      renderAdminList();
+    }
+
+    function exportCurrentWheel() {
+      const wheel = getActiveWheel();
+      const exportData = {
+        title: wheel.title,
+        items: wheel.items
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${wheel.title}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportAllWheels() {
+      const blob = new Blob([JSON.stringify(wheelsData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      a.download = `所有轉盤備份_${ts}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function handleImportFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const isTxt = /\.txt$/i.test(file.name);
+      const reader = new FileReader();
+
+      if (isTxt) {
+        reader.onload = (event) => {
+          try {
+            const rawText = event.target.result;
+            const newItems = parseTextItems(rawText);
+
+            if (newItems.length === 0) {
+              alert('未能從 TXT 檔案中識別到有效項目，請檢查格式！');
+              e.target.value = '';
+              return;
+            }
+
+            const mergeIntoCurrent = document.getElementById('txtImportMergeCurrent').checked;
+
+            if (mergeIntoCurrent) {
+              const wheel = getActiveWheel();
+              wheel.items.push(...newItems);
+              alert(`成功將 ${newItems.length} 個項目匯入到「${wheel.title}」！`);
+            } else {
+              const newId = 'wheel_' + Date.now();
+              wheelsData.push({
+                id: newId,
+                title: file.name.replace(/\.txt$/i, ''),
+                items: newItems
+              });
+              activeWheelId = newId;
+              alert(`成功從 TXT 建立新轉盤，共 ${newItems.length} 個項目！`);
+            }
+
+            saveWheels();
+            updateWheelSelect();
+            drawWheel();
+            renderAdminList();
+          } catch (err) {
+            alert('TXT 檔案讀取失敗，請確認檔案格式。');
+          }
+          e.target.value = '';
+        };
+        reader.readAsText(file);
+        return;
+      }
+
+      handleImportJson(e);
+    }
+
+    function handleImportJson(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          
+          if (Array.isArray(data) && data[0] && data[0].id && data[0].items) {
+             data.forEach(importedWheel => {
+                importedWheel.id = 'wheel_' + Date.now() + Math.random().toString(36).substring(2, 7);
+                wheelsData.push(importedWheel);
+             });
+             activeWheelId = wheelsData[wheelsData.length - 1].id;
+             alert(`成功匯入 ${data.length} 個轉盤！`);
+          } 
+          else if (data.items && Array.isArray(data.items)) {
+             const newId = 'wheel_' + Date.now();
+             wheelsData.push({
+               id: newId,
+               title: data.title || file.name.replace('.json', ''),
+               items: data.items
+             });
+             activeWheelId = newId;
+             alert(`成功匯入轉盤「${data.title || file.name.replace('.json', '')}」！`);
+          }
+          else if (Array.isArray(data) && data[0] && data[0].name) {
+             const newId = 'wheel_' + Date.now();
+             wheelsData.push({
+               id: newId,
+               title: file.name.replace('.json', ''),
+               items: data
+             });
+             activeWheelId = newId;
+             alert(`成功匯入轉盤，共 ${data.length} 個項目！`);
+          } 
+          else if (data.pool && Array.isArray(data.pool)) {
+             const newId = 'wheel_' + Date.now();
+             wheelsData.push({
+               id: newId,
+               title: file.name.replace('.json', ''),
+               items: data.pool.map(i => ({name: i.name, desc: i.desc}))
+             });
+             activeWheelId = newId;
+             alert(`成功匯入題庫，共 ${data.pool.length} 個項目！`);
+          }
+          else {
+             alert('找不到支援的資料格式，請確認 JSON 內容！');
+             return;
+          }
+
+          saveWheels();
+          updateWheelSelect();
+          drawWheel();
+          renderAdminList();
+        } catch (err) {
+          alert('JSON 解析失敗，請確認檔案格式是否為合法的 JSON。');
+        }
+        e.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function drawWheel() {
+      const canvas = document.getElementById('wheelCanvas');
+      const ctx = canvas.getContext('2d');
+      const wheel = getActiveWheel();
+      const visibleItems = wheel.items.filter(item => !item.hidden);
+      const total = visibleItems.length;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = canvas.width / 2 - 16;
+
+      if (total === 0) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#1e1e24';
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#2e2e38';
+        ctx.stroke();
+
+        ctx.fillStyle = '#6b7280';
+        ctx.font = 'bold 28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('轉盤目前沒有可顯示的項目', centerX, centerY);
+        return;
+      }
+
+      const arcSize = (2 * Math.PI) / total;
+
+      for (let i = 0; i < total; i++) {
+        const angle = i * arcSize;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
+        ctx.closePath();
+
+        ctx.fillStyle = SLICE_PALETTE[i % SLICE_PALETTE.length];
+        ctx.fill();
+
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(18, 18, 20, 0.4)';
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(angle + arcSize / 2);
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+
+        let fontSize = 28;
+        if (total > 40) fontSize = 16;
+        else if (total > 25) fontSize = 20;
+        else if (total > 15) fontSize = 24;
+
+        ctx.font = `bold ${fontSize}px sans-serif`;
+
+        let text = visibleItems[i].name;
+        if (text.length > 7) text = text.substring(0, 6) + '…';
+        ctx.fillText(text, radius - 28, 0);
+        ctx.restore();
+      }
+    }
+
+    function spinWheel() {
+      const wheel = getActiveWheel();
+      const visibleData = wheel.items
+        .map((item, index) => ({ item, originalIndex: index }))
+        .filter(x => !x.item.hidden);
+
+      if (visibleData.length < 2) {
+        return alert('轉盤內至少需要 2 個「顯示中」的項目才能開始旋轉！請至後台解除隱藏或新增項目。');
+      }
+      if (isSpinning) return;
+
+      isSpinning = true;
+      document.getElementById('spinBtn').disabled = true;
+
+      const total = visibleData.length;
+      const winningIndex = Math.floor(Math.random() * total);
+
+      const sliceDeg = 360 / total;
+      const targetDegCenter = (winningIndex * sliceDeg) + (sliceDeg / 2);
+      
+      const extraRounds = 360 * (6 + Math.floor(Math.random() * 3));
+      const targetRotation = extraRounds + (270 - targetDegCenter);
+
+      const finalAngle = currentDegree + (targetRotation - (currentDegree % 360)) + (360 * 5);
+      currentDegree = finalAngle;
+
+      const canvas = document.getElementById('wheelCanvas');
+      canvas.style.transform = `rotate(${finalAngle}deg)`;
+
+      setTimeout(() => {
+        isSpinning = false;
+        document.getElementById('spinBtn').disabled = false;
+        
+        const winner = visibleData[winningIndex];
+        showResultModal(winner.item);
+
+        if (document.getElementById('autoHideCheckbox').checked) {
+          wheel.items[winner.originalIndex].hidden = true;
+          saveWheels();
+          drawWheel(); 
+          updateWheelSelect();
+        }
+
+      }, 4100);
+    }
+
+    function showResultModal(item) {
+      document.getElementById('modalResultName').textContent = item.name;
+      
+      const descEl = document.getElementById('modalResultDesc');
+      if (item.desc && item.desc.trim() !== '') {
+        descEl.textContent = item.desc;
+        descEl.style.display = 'block';
+      } else {
+        descEl.style.display = 'none';
+      }
+      
+      document.getElementById('resultModal').classList.add('show');
+    }
+
+    function closeResultModal() {
+      document.getElementById('resultModal').classList.remove('show');
+    }
+
+    function openAdminView() {
+      document.getElementById('frontView').style.display = 'none';
+      document.getElementById('adminView').classList.add('show');
+      renderAdminList();
+    }
+
+    function closeAdminView() {
+      document.getElementById('adminView').classList.remove('show');
+      document.getElementById('frontView').style.display = 'flex';
+      drawWheel();
+      updateWheelSelect();
+    }
+
+    function addSingleItem() {
+      const nameInput = document.getElementById('singleName');
+      const descInput = document.getElementById('singleDesc');
+      const name = nameInput.value.trim();
+      const desc = descInput.value.trim();
+
+      if (!name) return alert('請輸入項目名稱！');
+
+      const wheel = getActiveWheel();
+      wheel.items.unshift({ name, desc, hidden: false });
+      saveWheels();
+
+      nameInput.value = '';
+      descInput.value = '';
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function parseSingleLine(line) {
+      const spaceIndex = line.search(/\s/);
+      let name, desc;
+      if (spaceIndex === -1) {
+        name = line;
+        desc = '';
+      } else {
+        name = line.slice(0, spaceIndex).trim();
+        desc = line.slice(spaceIndex + 1).trim();
+      }
+      return name ? { name, desc, hidden: false } : null;
+    }
+
+    function parseTextItems(rawText) {
+      const blocks = rawText.split(/\n\s*\n/).map(b => b.trim()).filter(b => b.length > 0);
+      const items = [];
+
+      if (blocks.length > 1) {
+        // 文字中有空行分隔：每個區塊若剛好兩行，視為「名稱／描述」；否則每行各自獨立解析
+        blocks.forEach(block => {
+          const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          if (lines.length === 0) return;
+
+          if (lines.length === 2) {
+            items.push({ name: lines[0], desc: lines[1], hidden: false });
+          } else {
+            lines.forEach(line => {
+              const parsed = parseSingleLine(line);
+              if (parsed) items.push(parsed);
+            });
+          }
+        });
+      } else {
+        // 沒有空行分隔：每一行各自獨立解析（行內以空白分隔名稱與描述）
+        const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        lines.forEach(line => {
+          const parsed = parseSingleLine(line);
+          if (parsed) items.push(parsed);
+        });
+      }
+
+      return items;
+    }
+
+    function addBatchItems() {
+      const rawText = document.getElementById('batchText').value;
+      if (!rawText.trim()) return alert('請填寫批量匯入文字！');
+
+      const newItems = parseTextItems(rawText);
+
+      if (newItems.length === 0) return alert('未能識別到有效項目，請檢查格式！');
+
+      const wheel = getActiveWheel();
+      wheel.items.push(...newItems);
+      saveWheels();
+
+      document.getElementById('batchText').value = '';
+      renderAdminList();
+      updateWheelSelect();
+      alert(`成功匯入 ${newItems.length} 個項目！`);
+    }
+
+    function toggleItemVisibility(index) {
+      const wheel = getActiveWheel();
+      wheel.items[index].hidden = !wheel.items[index].hidden;
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function unhideAllCurrentWheel() {
+      const wheel = getActiveWheel();
+      wheel.items.forEach(item => item.hidden = false);
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function renderAdminList() {
+      const wheel = getActiveWheel();
+      document.getElementById('adminItemCount').textContent = wheel.items.length;
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+
+      wheel.items.forEach((item, index) => {
+        const isHidden = item.hidden === true;
+        const tr = document.createElement('tr');
+        if (isHidden) tr.classList.add('row-hidden');
+
+        tr.innerHTML = `
+          <td style="text-align:center;">
+            <input type="checkbox" style="cursor:pointer; accent-color:var(--primary);" 
+                   ${!isHidden ? 'checked' : ''} onchange="toggleItemVisibility(${index})">
+          </td>
+          <td class="item-name" style="font-weight:700; color:#fff;">${item.name}</td>
+          <td style="color:var(--text-sub);">${item.desc || '<span style="color:var(--text-muted);">-</span>'}</td>
+          <td style="text-align:right;">
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+              <button class="btn-sm-edit" onclick="editItem(${index})">編輯</button>
+              <button class="btn-sm-del" onclick="deleteItem(${index})">刪除</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function editItem(index) {
+      const wheel = getActiveWheel();
+      const item = wheel.items[index];
+
+      const newName = prompt('編輯名稱：', item.name);
+      if (newName === null) return;
+      if (!newName.trim()) return alert('名稱不能為空！');
+
+      const newDesc = prompt('編輯描述（可留空）：', item.desc || '');
+      if (newDesc === null) return;
+
+      item.name = newName.trim();
+      item.desc = newDesc.trim();
+
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+      drawWheel();
+    }
+
+    function deleteItem(index) {
+      const wheel = getActiveWheel();
+      const item = wheel.items[index];
+      if (!confirm(`確定刪除項目「${item.name}」嗎？`)) return;
+
+      wheel.items.splice(index, 1);
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    function clearCurrentWheelItems() {
+      if (!confirm('確定清空此轉盤內的所有項目嗎？')) return;
+      const wheel = getActiveWheel();
+      wheel.items = [];
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+    }
+
+    updateWheelSelect();
+    drawWheel();
+  </script>
+</body>
+</html>

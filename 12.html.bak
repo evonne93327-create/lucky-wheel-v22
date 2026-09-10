@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>命運轉盤</title>
+  <title>同人女 XP 命運轉盤</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style id="customThemeStyle">
     :root {
@@ -39,20 +39,10 @@
       --bar-bg: #f3f4f6;
       --wheel-text: #ffffff;
       --wheel-result-desc: #be185d;
-      --fs-xxl: 1.5rem;
-      --fs-xl: 1.25rem;
-      --fs-lg: 1.125rem;
-      --fs-base: 1rem;
-      --fs-sm: 0.875rem;
-      --fs-xs: 0.75rem;
     }
   </style>
   <style>
-    * { box-sizing: border-box; 
-        margin: 0; 
-        padding: 0; 
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans TC", sans-serif; 
-        user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans TC", sans-serif; user-select: none; }
     html { overflow-y: scroll; }
     body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; }
 
@@ -60,8 +50,8 @@
     .view-content { width: 100%; max-width: 620px; }
 
     .header-area { text-align: center; margin-bottom: 20px; width: 100%; }
-    .title { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); letter-spacing: 1px; transition: color 0.3s ease; }
-    .subtitle { font-size: 0.875rem; color: var(--text-sub); margin-bottom: 16px; }
+    .title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); letter-spacing: 1px; transition: color 0.3s ease; }
+    .subtitle { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 16px; }
 
     .wheel-selector-bar {
       display: flex;
@@ -77,7 +67,7 @@
       color: var(--text-main);
       padding: 8px 14px;
       border-radius: 999px;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       outline: none;
       cursor: pointer;
       font-weight: 600;
@@ -93,25 +83,15 @@
 
     .wheel-wrapper {
       position: relative;
-      width: 100%;
-      max-width: 380px;
-      aspect-ratio: 1 / 1;
+      width: 340px;
+      height: 340px;
       margin: 0 auto 26px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
-    /* 針對平板與較大螢幕自動放大轉盤尺寸 */
-    @media (min-width: 600px) {
-      .wheel-wrapper {
-        max-width: 480px;
-      }
-    }
-    @media (min-width: 900px) {
-      .wheel-wrapper {
-        max-width: 520px;
-      }
+    @media (min-width: 440px) {
+      .wheel-wrapper { width: 380px; height: 380px; }
     }
 
     /* 獨立陰影與外框圖層：完全靜止，不隨轉盤旋轉 */
@@ -161,27 +141,17 @@
 
     .wheel-center-cap {
       position: absolute;
-      width: 52px;
-      height: 52px;
+      width: 44px;
+      height: 44px;
       background: linear-gradient(135deg, var(--card-bg), #2d2d38);
       border: 3px solid var(--border-card);
       border-radius: 50%;
       z-index: 5;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .wheel-center-cap:hover {
-      transform: scale(1.08);
-      border-color: var(--primary);
-      box-shadow: 0 6px 18px color-mix(in srgb, var(--primary) 40%, transparent);
-    }
-    .wheel-center-cap:active {
-      transform: scale(0.95);
+      font-size: 1.1rem;
     }
 
     /* 旋轉按鈕：陰影動態聯動 --accent */
@@ -212,7 +182,7 @@
       align-items: center;
       gap: 8px;
       margin-top: 18px;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       color: var(--text-sub);
       cursor: pointer;
       transition: color 0.2s;
@@ -225,99 +195,12 @@
       accent-color: var(--primary);
     }
 
-    /* 前台結果暫存區 */
-    .stash-section {
-      width: 100%;
-      max-width: 620px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-card);
-      border-radius: 18px;
-      padding: 18px;
-      margin-top: 28px;
-      box-sizing: border-box;
-    }
-    .stash-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .stash-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-    .stash-textarea {
-      width: 100%;
-      background: var(--bar-bg);
-      border: 1px solid var(--border-card);
-      color: var(--text-main);
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.875rem;
-      outline: none;
-      margin-bottom: 10px;
-      user-select: text;
-      min-height: 130px;
-      resize: vertical;
-      line-height: 1.5;
-      font-family: monospace;
-    }
-    .stash-textarea:focus { border-color: var(--primary); }
-    .stash-btn-row { display: flex; gap: 8px; }
-
-    .btn-stash-copy {
-      background: linear-gradient(135deg, var(--accent), var(--primary));
-      border: none;
-      color: #fff;
-      height: 38px;
-      padding: 0 18px;
-      border-radius: 999px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      font-size: 0.875rem;
-      box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 38%, transparent);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-stash-copy:hover {
-      opacity: 0.95;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px color-mix(in srgb, var(--accent) 50%, transparent);
-    }
-
-    .btn-stash-reset {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
-      border: none;
-      color: #fff;
-      height: 38px;
-      padding: 0 18px;
-      border-radius: 999px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      font-size: 0.875rem;
-      box-shadow: 0 8px 18px rgba(239, 68, 68, 0.38);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-stash-reset:hover {
-      opacity: 0.95;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(239, 68, 68, 0.5);
-    }
-
     .admin-entry-btn {
       background: transparent;
       border: 1px solid var(--border-card);
       border-radius: 999px;
       color: var(--text-sub);
-      font-size: 0.75rem;
+      font-size: 0.82rem;
       font-weight: 500;
       padding: 7px 20px;
       cursor: pointer;
@@ -348,8 +231,9 @@
     }
     .admin-section-title { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; }
 
+    /* 統一補充說明格式 */
     .admin-tip-text {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
       margin-bottom: 12px;
       line-height: 1.4;
@@ -362,19 +246,13 @@
       color: var(--text-main);
       padding: 10px 14px;
       border-radius: 10px;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       outline: none;
       margin-bottom: 10px;
       user-select: text;
     }
     .admin-input:focus, .admin-textarea:focus { border-color: var(--primary); }
     .admin-textarea { min-height: 120px; resize: vertical; line-height: 1.5; font-family: monospace; }
-
-    .input-group { margin-bottom: 10px; }
-    .input-group .admin-input { margin-bottom: 0; border-radius: 0; position: relative; }
-    .input-group .admin-input:first-child { border-radius: 10px 10px 0 0; }
-    .input-group .admin-input:last-child { border-radius: 0 0 10px 10px; border-top: none; }
-    .input-group .admin-input:focus { z-index: 1; border-top: 1px solid var(--primary); }
 
     .table-container {
       max-height: 300px;
@@ -383,17 +261,6 @@
       border: 1px solid var(--border-card);
       border-radius: 10px;
       padding: 0 10px;
-    }
-
-    .items-frame {
-      margin-bottom: 16px;
-    }
-    .items-frame .table-container:first-of-type { margin-bottom: 20px; }
-    .items-frame-subtitle {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 6px;
     }
 
     .btn-primary {
@@ -405,7 +272,7 @@
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.88rem;
       transition: background 0.2s;
       display: flex;
       align-items: center;
@@ -413,22 +280,33 @@
     }
     .btn-primary:hover { background: var(--primary-hover); }
 
-    .btn-batch-delete {
-      background: #ef4444;
+    .btn-gray {
+      flex: 1;
+      background: #4b5563;
       color: #fff;
       border: none;
-      height: 38px;
-      padding: 0 18px;
-      border-radius: 10px;
+      padding: 8px 16px;
+      border-radius: 999px;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.82rem;
       transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .btn-batch-delete:hover { background: #dc2626; }
+    .btn-gray:hover { background: #6b7280; }
+
+    .btn-danger {
+      flex: 1;
+      background: #7f1d1d;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.2s;
+    }
+    .btn-danger:hover { background: #991b1b; }
 
     .btn-sm-del {
       background: none;
@@ -437,12 +315,13 @@
       border-radius: 6px;
       padding: 4px 8px;
       cursor: pointer;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 600;
       transition: background 0.2s;
     }
     .btn-sm-del:hover { background: rgba(239, 68, 68, 0.12); }
 
+    /* 外框顏色與文字顏色（var(--primary-light)）保持一致 */
     .btn-sm-edit {
       background: none;
       border: 1px solid currentColor;
@@ -450,7 +329,7 @@
       border-radius: 6px;
       padding: 4px 8px;
       cursor: pointer;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 600;
       transition: background 0.2s;
     }
@@ -464,7 +343,7 @@
       width: 28px;
       height: 38px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -477,12 +356,12 @@
     .data-table th, .data-table td {
       padding: 10px 8px;
       border-bottom: 1px solid var(--border-card);
-      font-size: 0.875rem;
+      font-size: 0.86rem;
       text-align: left;
       word-wrap: break-word;
     }
     .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table th { color: var(--text-muted); font-size: 0.75rem; position: sticky; top: 0; background: var(--bar-bg); z-index: 1; }
+    .data-table th { color: var(--text-muted); font-size: 0.8rem; position: sticky; top: 0; background: var(--bar-bg); z-index: 1; }
     .data-table td.item-name { color: var(--text-main); font-weight: 700; }
 
     .row-hidden { opacity: 0.6; }
@@ -497,6 +376,7 @@
     }
     .modal-backdrop.show { display: flex; }
     
+    /* 結果彈窗：頂部光暈、邊框與陰影動態聯動 --accent */
     .result-modal-box {
       background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 75%), var(--card-bg);
       border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
@@ -510,13 +390,6 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px color-mix(in srgb, var(--accent) 15%, transparent);
       animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
-
-    body.theme-light .result-modal-box {
-      border: 1.5px solid var(--wheel-result-desc);
-      background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--wheel-result-desc) 14%, transparent), transparent 75%), var(--card-bg);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18), 0 0 16px color-mix(in srgb, var(--wheel-result-desc) 20%, transparent);
-    }
-
     @keyframes popIn {
       from { transform: scale(0.85); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -524,7 +397,7 @@
 
     .result-icon { font-size: 3rem; margin-bottom: 12px; }
     .result-name { 
-      font-size: 1.75rem; 
+      font-size: 1.7rem; 
       font-weight: 800; 
       color: var(--text-main); 
       margin-bottom: 12px; 
@@ -532,7 +405,7 @@
       overflow-wrap: break-word;
     }
     .result-desc {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--wheel-result-desc);
       line-height: 1.6;
       background: rgba(255, 255, 255, 0.04);
@@ -543,38 +416,7 @@
       word-break: break-all;
     }
 
-    .edit-modal-box {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-card);
-      border-radius: 24px;
-      padding: 26px 24px;
-      width: 100%;
-      max-width: 420px;
-      box-sizing: border-box;
-      text-align: left;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-      animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    }
-    .edit-modal-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; }
-    .edit-modal-btn-row { display: flex; gap: 8px; margin-top: 4px; }
-
-    .admin-search-wrap { position: relative; margin-bottom: 10px; }
-    .admin-search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      height: 18px;
-      padding-right: 10px;
-      border-right: 1px solid var(--border-card);
-      font-size: 1rem;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .admin-search-wrap .admin-search-input { padding-left: 46px; margin-bottom: 0; font-family: monospace; }
-
+    /* 全站整體顏色設定列表樣式 */
     .global-theme-item {
       display: flex;
       align-items: center;
@@ -600,22 +442,27 @@
       color: var(--text-main);
       padding: 0 8px;
       border-radius: 6px;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-family: monospace;
       text-transform: uppercase;
       outline: none;
       flex-shrink: 0;
     }
-    .global-theme-input:focus { border-color: var(--primary); }
-    .global-theme-info { flex: 1; min-width: 0; }
+    .global-theme-input:focus {
+      border-color: var(--primary);
+    }
+    .global-theme-info {
+      flex: 1;
+      min-width: 0;
+    }
     .global-theme-varname {
       font-family: monospace;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--primary-light);
     }
     .global-theme-desc {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       color: var(--text-sub);
       line-height: 1.3;
       margin-top: 2px;
@@ -629,7 +476,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 0.875rem;
+      font-size: 0.84rem;
       transition: all 0.2s;
     }
     .theme-tab-btn.active {
@@ -658,8 +505,7 @@
         <div class="wheel-shadow-ring"></div>
         <div class="wheel-pointer"></div>
         <canvas id="wheelCanvas" width="800" height="800"></canvas>
-        <!-- 點擊中間圓球即可直接旋轉 -->
-        <div class="wheel-center-cap" title="點擊直接旋轉轉盤" onclick="spinWheel()">🔮</div>
+        <div class="wheel-center-cap">🔮</div>
       </div>
 
       <button id="spinBtn" class="btn-spin" onclick="spinWheel()">旋轉命運</button>
@@ -669,22 +515,9 @@
         抽出後自動隱藏該項目
       </label>
 
-      <!-- 抽選結果暫存區 -->
-      <div class="stash-section">
-        <div class="stash-header">
-          <span class="stash-title">📋 結果暫存區 (<span id="stashCount">0</span>)</span>
-        </div>
-        <div class="admin-tip-text">每次轉出結果會自動記錄於下方，方便直接複製使用。</div>
-        <textarea id="stashTextarea" class="stash-textarea" placeholder="抽出的結果會自動記錄在這裡…" onchange="saveStash()" oninput="saveStash()"></textarea>
-        <div class="stash-btn-row">
-          <button class="btn-stash-copy" style="flex: 1;" onclick="copyStash()">複製全部結果</button>
-          <button class="btn-stash-reset" style="flex: 1;" onclick="resetStash()">重置</button>
-        </div>
-      </div>
-
       <!-- 前台底端按鈕 -->
       <div>
-        <button class="admin-entry-btn" onclick="openAdminView()">後台管理&題庫編輯</button>
+        <button class="admin-entry-btn" onclick="openAdminView()">後台管理與題庫編輯</button>
       </div>
       <div>
         <button class="admin-entry-btn" style="margin-top: 12px;" onclick="toggleTheme()">☀️ / 🌙</button>
@@ -695,12 +528,13 @@
     <div id="adminView" class="admin-view">
       <div class="admin-card">
         <div class="admin-title-bar">
-          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">轉盤管理</h2>
+          <h2 style="font-size: 1.2rem; font-weight:800; color: var(--text-main);">轉盤後台管理</h2>
           <button class="admin-entry-btn" style="margin-top:0;" onclick="closeAdminView()">返回轉盤</button>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-          <select id="adminWheelSelect" class="wheel-select-dropdown" style="padding: 6px 10px; font-size: 0.875rem; width: 100%; max-width: none;" onchange="onAdminWheelSelectChange()"></select>
+        <!-- 轉盤選擇與操作按鈕：外框顏色與文字一致 -->
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; background: var(--bar-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border-card);">
+          <select id="adminWheelSelect" class="wheel-select-dropdown" style="padding: 6px 10px; font-size: 0.85rem; width: 100%; max-width: none;" onchange="onAdminWheelSelectChange()"></select>
           <div style="display: flex; gap: 8px;">
             <button class="btn-sm-edit" style="flex: 1;" onclick="promptCreateWheel()">新增轉盤</button>
             <button class="btn-sm-edit" style="flex: 1;" onclick="renameCurrentWheel()">重新命名</button>
@@ -708,77 +542,69 @@
           </div>
         </div>
 
-        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
-          <div class="admin-section-title">➕ 單筆新增</div>
-          <input type="text" id="singleName" class="admin-input" placeholder="名稱（必填）">
-          <input type="text" id="singleDesc" class="admin-input" placeholder="描述（選填，可留空）">
-          <button class="btn-primary" style="width: 100%;" onclick="addSingleItem()">新增項目</button>
+        <div class="admin-section-title">➕ 單筆新增項目</div>
+        <input type="text" id="singleName" class="admin-input" placeholder="名稱（必填）">
+        <input type="text" id="singleDesc" class="admin-input" placeholder="描述（選填，可留空）">
+        <button class="btn-primary" style="width: 100%; margin-bottom: 22px;" onclick="addSingleItem()">新增項目</button>
+
+        <div class="admin-section-title">📑 文字批量匯入項目</div>
+        <div class="admin-tip-text">
+          格式規範：支援兩種寫法，可混用。<br>①「名稱 描述」寫在同一行，中間用空白分隔（沒有空白則整行皆為名稱）；<br>②「名稱」和「描述」分兩行寫，中間用「空行」跟其他項目隔開。
+        </div>
+        <textarea id="batchText" class="admin-textarea" placeholder="破鏡重圓 分開後又複合&#10;&#10;聖人私心&#10;為一人甘願跌落神壇&#10;&#10;年上"></textarea>
+        <button id="batchImportBtn" class="btn-primary" style="width: 100%; margin-bottom: 24px;" onclick="addBatchItems()">解析並匯入</button>
+
+        <!-- 顯示中的項目列表 -->
+        <div>
+          <div class="admin-section-title">📜 顯示中的項目 (<span id="adminVisibleCount">0</span>)</div>
+          <div class="admin-tip-text">打勾代表顯示在轉盤上，取消勾選將移至下方隱藏清單。</div>
         </div>
 
-        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
-          <div class="admin-section-title">📑 批量匯入</div>
-          <div class="admin-tip-text">
-            格式規範：支援兩種寫法，可混用。<br>①「名稱 描述」同一行，中間以空白分隔（沒有空白則皆為名稱）；<br>②「名稱」和「描述」分兩行，中間用「空行」跟其他項目分隔。
-          </div>
-          <textarea id="batchText" class="admin-textarea" placeholder="破鏡重圓 分開後又複合&#10;&#10;聖人私心&#10;為一人甘願跌落神壇"></textarea>
-          <button id="batchImportBtn" class="btn-primary" style="width: 100%;" onclick="addBatchItems()">解析並匯入</button>
+        <div class="table-container" style="margin-bottom: 24px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align:center;">顯示</th>
+                <th style="width: 35%;">名稱</th>
+                <th>描述</th>
+                <th style="width: 64px; text-align:right;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
         </div>
 
-        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
-          <div class="admin-section-title">🎡 轉盤項目</div>
-          <div class="admin-tip-text">打勾代表顯示，取消勾選的項目將移至下方隱藏清單。</div>
-
-          <div class="items-frame">
-            <div class="admin-search-wrap" style="margin-bottom: 10px;">
-              <span class="admin-search-icon">🔍</span>
-              <input type="text" id="adminItemsSearch" class="admin-input admin-search-input" placeholder="搜尋名稱或描述…（同時搜尋顯示中與已隱藏）" oninput="renderAdminList()">
-            </div>
-
-            <div class="items-frame-subtitle">顯示中 (<span id="adminVisibleCount">0</span>)</div>
-            <div class="table-container" style="margin-bottom: 20px; padding: 0 10px;">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th style="width: 50px; text-align:center;">顯示</th>
-                    <th style="width: 35%;">名稱</th>
-                    <th>描述</th>
-                    <th style="width: 64px; text-align:right;">操作</th>
-                  </tr>
-                </thead>
-                <tbody id="adminTableBody"></tbody>
-              </table>
-            </div>
-
-            <div class="items-frame-subtitle">已隱藏 (<span id="adminHiddenCount">0</span>)</div>
-            <div class="table-container" style="margin-bottom: 12px; padding: 0 10px;">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th style="width: 50px; text-align:center;">顯示</th>
-                    <th style="width: 35%;">名稱</th>
-                    <th>描述</th>
-                    <th style="width: 64px; text-align:right;">操作</th>
-                  </tr>
-                </thead>
-                <tbody id="adminHiddenTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div style="display: flex; gap: 8px; margin-top: 12px; margin-bottom: 24px;">
-            <button id="btnUnhideAll" class="btn-primary" style="flex: 1;" onclick="unhideAllItems()">全部取消隱藏</button>
-            <button id="btnBatchDelete" class="btn-batch-delete" style="flex: 1;" onclick="batchDeleteHiddenItems()">批量刪除</button>
-          </div>
+        <!-- 已隱藏的項目列表 -->
+        <div>
+          <div class="admin-section-title">👁️ 已隱藏的項目 (<span id="adminHiddenCount">0</span>)</div>
+          <div class="admin-tip-text">打勾代表恢復顯示在轉盤上。</div>
         </div>
 
+        <div class="table-container" style="margin-bottom: 12px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align:center;">顯示</th>
+                <th style="width: 35%;">名稱</th>
+                <th>描述</th>
+                <th style="width: 64px; text-align:right;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="adminHiddenTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- 全部取消隱藏按鈕 -->
+        <button id="btnUnhideAll" class="btn-primary" style="width: 100%; margin-bottom: 24px;" onclick="unhideAllItems()">全部取消隱藏</button>
+
+        <!-- 轉盤扇形顏色自訂 -->
         <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
-          <div class="admin-section-title">🎨 轉盤顏色 (<span id="currentModeLabel">夜間</span>模式- <span id="colorCountLabel">0</span>/10)</div>
-          <div class="admin-tip-text">日/夜間模式顏色各自獨立。最多可支援10種顏色</div>
+          <div class="admin-section-title">🎨 轉盤扇形顏色自訂 (<span id="currentModeLabel">夜間</span>- <span id="colorCountLabel">0</span>/10)</div>
+          <div class="admin-tip-text">日/夜間模式顏色各自獨立。</div>
           
-          <div class="table-container" style="max-height: none; overflow: visible; padding: 12px 10px; margin-bottom: 16px;">
-            <div id="colorSettingsContainer" style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;"></div>
-          </div>
+          <div id="colorSettingsContainer" style="display: flex; gap: 8px; width: 100%; box-sizing: border-box; margin-bottom: 16px;"></div>
           
+          <!-- 按鈕區域：新增顏色 與 重置為預設 並排，應用到所有轉盤在下方 -->
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; gap: 8px;">
               <button id="btnAddColor" class="btn-primary" style="flex: 1;" onclick="addNewPaletteColor()">新增顏色</button>
@@ -788,6 +614,7 @@
           </div>
         </div>
         
+        <!-- 匯入 / 匯出 區塊 -->
         <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
           <div class="admin-section-title">💾 JSON / TXT 檔案 匯入 / 匯出</div>
           <div class="admin-tip-text">
@@ -799,8 +626,8 @@
             <div>
               <button class="btn-primary" 
               style="width: 100%;" 
-              onclick="document.getElementById('importJsonInput').click()">📥 從 JSON / TXT 匯入</button>
-              <label class="checkbox-label" style="margin-top: 10px; font-size: 0.875rem;">
+              onclick="document.getElementById('importJsonInput').click()">📥 從 JSON / TXT 匯入（題庫或顏色設定）</button>
+              <label class="checkbox-label" style="margin-top: 10px; font-size: 0.82rem;">
                 <input type="checkbox" id="txtImportMergeCurrent">
                 TXT 匯入時加入目前所選轉盤（不勾選則建立為新轉盤）
               </label>
@@ -816,12 +643,9 @@
           </div>
         </div>
 
+        <!-- 後台底端：日夜間切換（點擊 5 次開啟全域色彩第二層後台） -->
         <div style="margin-top: 32px; text-align: center;">
-          <button class="admin-entry-btn" style="margin-top: 0;" onclick="openCheatViewDirect()">🎲 機率調整</button>
-          <div style="margin-top: 12px;">
-            <button id="adminThemeToggleBtn" class="admin-entry-btn" style="margin-top: 0;" onclick="handleAdminThemeClick()">☀️ / 🌙</button>
-            <div class="admin-tip-text" style="margin-top: 8px; margin-bottom: 0;">連點 5 次有驚喜</div>
-          </div>
+          <button id="adminThemeToggleBtn" class="admin-entry-btn" style="margin-top: 0;" onclick="handleAdminThemeClick()">☀️ / 🌙</button>
         </div>
 
       </div>
@@ -831,75 +655,42 @@
     <div id="themeAdminView" class="admin-view">
       <div class="admin-card">
         <div class="admin-title-bar">
-          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">🎨 全站配色管理</h2>
+          <h2 style="font-size: 1.2rem; font-weight:800; color: var(--text-main);">🎨 全站介面配色管理</h2>
           <button class="admin-entry-btn" style="margin-top:0;" onclick="closeThemeAdminView()">確定</button>
         </div>
 
-        <div class="admin-tip-text">日間/夜間模式顏色各自獨立。修改後即時全站生效並自動保存。</div>
+        <div class="admin-tip-text">日/夜間模式顏色各自獨立。修改後即時全站生效並自動保存。</div>
 
+        <!-- 日夜模式切換 Tab -->
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
           <button id="tabDarkBtn" class="theme-tab-btn active" onclick="switchThemeEditTab('dark')">🌙 編輯夜間模式配色</button>
           <button id="tabLightBtn" class="theme-tab-btn" onclick="switchThemeEditTab('light')">☀️ 編輯日間模式配色</button>
         </div>
 
+        <!-- 變數編輯列表（每項一行，含詳細應用說明） -->
         <div id="globalThemeInputsContainer" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;"></div>
 
         <button class="btn-primary" style="width: 100%; margin-top: 8px; margin-bottom: 8px;" onclick="resetCurrentThemeVariables()">重置此模式配色為預設</button>
 
+        <!-- 直接接在正下方的匯入與匯出按鈕（並排陳列，無額外分隔線） -->
         <input type="file" id="importGlobalThemeJsonInput" accept=".json" style="display:none;" onchange="handleImportGlobalThemeJson(event)">
         <div style="display: flex; gap: 8px;">
           <button class="btn-primary" style="flex: 1;" onclick="document.getElementById('importGlobalThemeJsonInput').click()">📥 匯入全域主題配色</button>
           <button class="btn-primary" style="flex: 1;" onclick="exportGlobalThemesJson()">📤 匯出全域主題配色</button>
         </div>
 
+        <!-- 後後台底端：日夜間切換按鈕 -->
         <div style="margin-top: 32px; text-align: center;">
-          <button class="admin-entry-btn" style="margin-top: 0;" onclick="handleCheatToggleClick()">☀️ / 🌙</button>
-          <div class="admin-tip-text" style="margin-top: 8px; margin-bottom: 0;">連點 5 次有驚喜</div>
+          <button class="admin-entry-btn" style="margin-top: 0;" onclick="toggleThemeInThemeAdmin()">☀️ / 🌙</button>
         </div>
 
-      </div>
-    </div>
-
-    <!-- 第三層：機率作弊面板 -->
-    <div id="cheatView" class="admin-view">
-      <div class="admin-card">
-        <div class="admin-title-bar">
-          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">🎲 機率設定</h2>
-          <button class="admin-entry-btn" style="margin-top:0;" onclick="closeCheatView()">確定</button>
-        </div>
-
-        <div class="admin-tip-text">調整「目前所選轉盤」中各顯示項目的中獎權重，數字越大代表被抽中的機率越高（預設為 1）。輸入框右側會即時顯示目前的中獎機率。</div>
-
-        <label class="checkbox-label" style="margin: 4px 0 12px;">
-          <input type="checkbox" id="cheatVisualToggle" onchange="toggleCheatVisualMode()">
-          轉盤外觀跟著機率改變（勾選後扇形大小會不一致，容易被看出來作弊；不勾選則維持公平的外觀）
-        </label>
-
-        <button class="btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="resetCheatWeights()">全部重置為 1（公平機率）</button>
-
-        <div class="table-container" style="max-height: none; overflow: visible; margin-bottom: 12px; padding: 10px 10px 0;">
-          <div class="admin-search-wrap" style="margin-bottom: 10px;">
-            <span class="admin-search-icon">🔍</span>
-            <input type="text" id="cheatSearchInput" class="admin-input admin-search-input" placeholder="搜尋名稱或描述…" oninput="renderCheatList()">
-          </div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th style="width: 45%;">名稱</th>
-                <th style="width: 110px;">權重</th>
-                <th style="width: 70px; text-align:right;">機率</th>
-              </tr>
-            </thead>
-            <tbody id="cheatTableBody"></tbody>
-          </table>
-        </div>
       </div>
     </div>
   </main>
 
   <div id="resultModal" class="modal-backdrop">
     <div class="result-modal-box">
-      <div class="result-icon">✨️</div>
+      <div class="result-icon">🖋</div>
       <div class="result-name" id="modalResultName">項目名稱</div>
       <div class="result-desc" id="modalResultDesc">項目描述</div>
       <button class="btn-spin" style="padding: 10px 32px; font-size: 1rem;" onclick="closeResultModal()">確認收下</button>
@@ -907,43 +698,69 @@
     </div>
   </div>
 
-  <!-- 編輯項目 Modal -->
-  <div id="editItemModal" class="modal-backdrop">
-    <div class="edit-modal-box">
-      <div class="edit-modal-title">📝 編輯項目</div>
-      <input type="text" id="editItemName" class="admin-input" placeholder="名稱（必填）">
-      <input type="text" id="editItemDesc" class="admin-input" style="margin-bottom: 4px;" placeholder="描述（選填，可留空）">
-      <div class="edit-modal-btn-row">
-        <button class="btn-primary" style="flex: 1;" onclick="saveEditItemModal()">儲存</button>
-        <button class="btn-batch-delete" style="flex: 1;" onclick="closeEditItemModal()">取消</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const UI_FONT_STACK = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans TC", sans-serif';
-
     const DEFAULT_XP_POOL = [
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" },
-      { name: "去", desc: "" },
-      { name: "不去", desc: "" }
+      { name: "陰陽兩隔", desc: "此生訣別餘生難忘" },
+      { name: "契約戀愛", desc: "本是各取所需卻情難自已" },
+      { name: "養成", desc: "陪你長大也陪你墜入愛河" },
+      { name: "白月光與硃砂痣", desc: "一個求而不得，一個愛而不捨" },
+      { name: "情敵變情人", desc: "你的品味不錯嘛" },
+      { name: "破鏡難圓", desc: "緣分未盡卻已面目全非" },
+      { name: "雙向暗戀", desc: "心意相通，卻始終無人戳破" },
+      { name: "金絲雀", desc: "你是我的珍寶，也是我的囚徒" },
+      { name: "無間道", desc: "我的敵人也是我唯一的知己" },
+      { name: "雙向奔赴", desc: "你向我奔赴，我亦步步向你" },
+      { name: "病嬌", desc: "予你愛意，也予你枷鎖" },
+      { name: "老房子著火", desc: "多年心如止水，偏為你起了波瀾" },
+      { name: "Soul mate", desc: "靈魂共振的夥伴" },
+      { name: "真相是真", desc: "密而不宣的愛情" },
+      { name: "草莓煙", desc: "成年與未成年不可言說的秘密" },
+      { name: "夏令營效應", desc: "相遇於盛夏，卻終究走回各自人生。" },
+      { name: "死遁", desc: "假死/真死來成全對方" },
+      { name: "枯木逢春", desc: "冷漠之人終被融化" },
+      { name: "破鏡重圓", desc: "分開後又複合" },
+      { name: "老夫老妻", desc: "細水長流式感情" },
+      { name: "爛人真心", desc: "滿身劣跡卻唯獨對你真摯" },
+      { name: "聖人私心", desc: "為一人甘願跌落神壇" },
+      { name: "恨海情天", desc: "愛恨交織，至死方休" },
+      { name: "鏡花水月", desc: "看似觸手可及的幻象悲劇" },
+      { name: "明月高懸", desc: "可望而不可即的高嶺之花" },
+      { name: "歡喜冤家", desc: "見面互懟，背地牽掛" },
+      { name: "宿敵變摯友", desc: "從不死不休到背靠背作戰" },
+      { name: "摯友變宿敵", desc: "信仰相悖，親手割袍斷義" },
+      { name: "相愛相殺", desc: "博弈對峙，互為軟肋亦是利刃" },
+      { name: "師徒", desc: "綱常倫理下的不可言說" },
+      { name: "骨科", desc: "同根共生的血脈深淵" },
+      { name: "偽骨科", desc: "同一屋簷下的曖昧潮湧" },
+      { name: "愛而不得", desc: "耗盡半生終究隔海相望" },
+      { name: "先婚後愛", desc: "從利益搭夥到假戲真做" },
+      { name: "強制愛", desc: "斬斷所有退路的禁錮與掌控" },
+      { name: "默默守護", desc: "不求回應的退後一步" },
+      { name: "青梅竹馬", desc: "刻進成長骨髓的陪伴" },
+      { name: "天降", desc: "蠻橫撞進平靜生活的流星" },
+      { name: "年上", desc: "掌控感與游刃有餘的引領" },
+      { name: "年下", desc: "直球追擊與隱忍的野心" },
+      { name: "救贖", desc: "將你拉出無光泥沼的唯一光芒" },
+      { name: "一起腐爛", desc: "不求光明，只求與你同沉深淵" },
+      { name: "暗戀", desc: "一人兵荒馬亂的秘密花園" },
+      { name: "明戀", desc: "人盡皆知的坦蕩與赤誠" },
+      { name: "雙強", desc: "勢均力敵，王座並肩" },
+      { name: "霸總嬌妻", desc: "絕對財力與絕對專寵" },
+      { name: "追妻火葬場", desc: "曾棄之如履，今卑微求渡" },
+      { name: "追夫火葬場", desc: "幡然醒悟後的挽留與彌補" },
+      { name: "對抗路", desc: "寸土必爭，針鋒相對的火花" },
+      { name: "露水姻緣", desc: "清醒著沉淪的成年人限定" },
+      { name: "白頭偕老", desc: "歲月沉澱後的共赴白首" },
+      { name: "日久生情", desc: "不知覺間已依賴入骨" },
+      { name: "一見鍾情", desc: "回眸一眼即是萬年沉淪" },
+      { name: "君臣", desc: "社稷江山下的君臣之禮" },
+      { name: "主僕", desc: "身份懸殊下的唯命是從" },
+      { name: "前世今生", desc: "孟婆湯洗不掉的靈魂印記" },
+      { name: "錯位時空", desc: "我身在未來，你留在過去" },
+      { name: "蘭因絮果", desc: "花開燦爛，落絮荒涼" },
+      { name: "莞莞類卿", desc: "透過你看向另一個影子" },
+      { name: "明媒正娶", desc: "鳳冠霞帔，天下共證" },
+      { name: "地下情", desc: "無人知曉的幽暗微光" }
     ];
 
     const DEFAULT_DARK_PALETTE = [
@@ -956,22 +773,23 @@
       '#F43F5E', '#8B5CF6', '#FDA4AF', '#818CF8'
     ];
 
+    /* 全站介面主題配色定義與說明 */
     const THEME_VARS_META = [
-      { varName: '--bg', label: '整體背景色', desc: '整個頁面的最底層背景底色。' },
+      { varName: '--bg', label: '網頁整體背景色', desc: '整個頁面的最底層背景底色。' },
       { varName: '--card-bg', label: '卡片與彈窗背景色', desc: '後台面板、抽中結果彈窗與轉盤中心圓球的底色。' },
       { varName: '--card-hover', label: '卡片懸停色', desc: '互動區塊懸停底色。' },
       { varName: '--primary', label: '主品牌主題色', desc: '所有主要按鈕、選中外框、旋轉按鈕漸層終點色。' },
-      { varName: '--primary-hover', label: '主要主題色懸停效果', desc: '滑鼠懸停於主要紫色按鈕時的加深顏色。' },
+      { varName: '--primary-hover', label: '主主題色懸停效果', desc: '滑鼠懸停於主要紫色按鈕時的加深顏色。' },
       { varName: '--primary-light', label: '主題淺色 / 輔助高亮', desc: '列表操作編輯按鈕文字與全域變數名稱高亮。' },
-      { varName: '--accent', label: '強調色', desc: '旋轉按鈕漸層起始色、彈窗霓虹外框與光暈效果。' },
+      { varName: '--accent', label: '強調節奏粉色', desc: '旋轉按鈕漸層起始色、彈窗霓虹外框與光暈效果。' },
       { varName: '--accent-hover', label: '強調色懸停效果', desc: '旋轉按鈕或強調區塊懸停加深色。' },
       { varName: '--text-main', label: '主要標題文字色', desc: '大標題、卡片標題、抽中項目名稱等主要文字。' },
-      { varName: '--text-sub', label: '次要文字與說明文字色', desc: '副標題、各區塊格式說明文字與項目備註描述。' },
+      { varName: '--text-sub', label: '次要文字與說明色', desc: '副標題、各區塊格式說明文字與項目備註描述。' },
       { varName: '--text-muted', label: '弱化輔助文字色', desc: '表格欄位標題與預設空值提示色。' },
       { varName: '--border-card', label: '邊框與轉盤輪廓色', desc: '後台卡片邊框、轉盤周圍陰影環外框與輸入框框線。' },
-      { varName: '--bar-bg', label: '區塊條背景色', desc: '輸入框、表格內部、頂端轉盤切換列背景底色。' },
-      { varName: '--wheel-text', label: '轉盤文字色', desc: '轉盤圓形畫布上繪製之項目文字顏色。' },
-      { varName: '--wheel-result-desc', label: '結果描述框文字色', desc: '抽中命運彈窗中描述文字專用顏色。' }
+      { varName: '--bar-bg', label: '區塊條條背景色', desc: '輸入框、表格內部、頂端轉盤切換列背景底色。' },
+      { varName: '--wheel-text', label: '轉盤扇形文字色', desc: '轉盤圓形畫布上繪製之扇形項目文字顏色。' },
+      { varName: '--wheel-result-desc', label: '抽中結果描述框文字色', desc: '抽中命運彈窗中描述文字專用顏色。' }
     ];
 
     const DEFAULT_DARK_THEME_VARS = {
@@ -1015,7 +833,7 @@
       light: { ...DEFAULT_LIGHT_THEME_VARS }
     };
 
-    let currentEditingThemeTab = 'dark';
+    let currentEditingThemeTab = 'dark'; // 'dark' | 'light'
 
     function applyCustomThemeStyles() {
       const styleEl = document.getElementById('customThemeStyle');
@@ -1054,17 +872,20 @@
       initColorSettings();
     }
 
+    /* 在後後台內切換日夜間模式 */
     function toggleThemeInThemeAdmin() {
       toggleTheme();
       const isLight = isLightMode();
       switchThemeEditTab(isLight ? 'light' : 'dark');
     }
 
+    /* 連續點擊 5 次開啟第二層「全站色彩後台」 */
     let adminThemeClickCount = 0;
     let adminThemeClickTimer = null;
 
     function handleAdminThemeClick() {
       toggleTheme();
+
       adminThemeClickCount++;
       clearTimeout(adminThemeClickTimer);
       adminThemeClickTimer = setTimeout(() => {
@@ -1089,127 +910,6 @@
       initColorSettings();
       renderAdminList();
       drawWheel();
-    }
-
-    let cheatClickCount = 0;
-    let cheatClickTimer = null;
-    let cheatVisualMode = localStorage.getItem('wheel_cheat_visual_v1') === 'true';
-
-    function isCheatVisualEnabled() {
-      return cheatVisualMode;
-    }
-
-    function toggleCheatVisualMode() {
-      cheatVisualMode = document.getElementById('cheatVisualToggle').checked;
-      localStorage.setItem('wheel_cheat_visual_v1', cheatVisualMode ? 'true' : 'false');
-      drawWheel();
-    }
-
-    function handleCheatToggleClick() {
-      toggleThemeInThemeAdmin();
-      cheatClickCount++;
-      clearTimeout(cheatClickTimer);
-      cheatClickTimer = setTimeout(() => {
-        cheatClickCount = 0;
-      }, 2500);
-
-      if (cheatClickCount >= 5) {
-        cheatClickCount = 0;
-        openCheatView();
-      }
-    }
-
-    let cheatViewReturnTo = 'themeAdminView';
-
-    function openCheatView() {
-      cheatViewReturnTo = 'themeAdminView';
-      document.getElementById('themeAdminView').classList.remove('show');
-      document.getElementById('cheatView').classList.add('show');
-      document.getElementById('cheatVisualToggle').checked = cheatVisualMode;
-      renderCheatList();
-    }
-
-    function openCheatViewDirect() {
-      cheatViewReturnTo = 'adminView';
-      document.getElementById('adminView').classList.remove('show');
-      document.getElementById('cheatView').classList.add('show');
-      document.getElementById('cheatVisualToggle').checked = cheatVisualMode;
-      renderCheatList();
-    }
-
-    function closeCheatView() {
-      document.getElementById('cheatView').classList.remove('show');
-      document.getElementById(cheatViewReturnTo).classList.add('show');
-    }
-
-    function renderCheatList() {
-      const wheel = getActiveWheel();
-      const tbody = document.getElementById('cheatTableBody');
-      const searchTerm = document.getElementById('cheatSearchInput').value;
-      tbody.innerHTML = '';
-
-      const allVisible = wheel.items.filter(item => !item.hidden);
-      const totalWeight = allVisible.reduce((sum, item) => sum + ((item.weight && item.weight > 0) ? item.weight : 1), 0);
-
-      const visible = wheel.items
-        .map((item, index) => ({ item, index }))
-        .filter(x => !x.item.hidden)
-        .filter(x => itemMatchesSearch(x.item, searchTerm));
-
-      if (visible.length === 0) {
-        const emptyMsg = allVisible.length > 0 ? '沒有符合搜尋條件的項目' : '目前沒有顯示中的項目';
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:16px;">${emptyMsg}</td></tr>`;
-        return;
-      }
-
-      visible.forEach(({ item, index }) => {
-        const weight = (item.weight && item.weight > 0) ? item.weight : 1;
-        const pct = totalWeight > 0 ? (weight / totalWeight * 100) : 0;
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-cheat-index', index);
-        tr.innerHTML = `
-          <td class="item-name">${item.name}</td>
-          <td><input type="number" class="admin-input" style="margin-bottom: 0; height: 32px;" min="0.1" step="0.1" value="${weight}" oninput="updateItemWeight(${index}, this.value)"></td>
-          <td class="cheat-prob" style="text-align: right; font-family: monospace; font-weight: 700; color: var(--primary-light);">${pct.toFixed(1)}%</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function refreshCheatProbabilities() {
-      const wheel = getActiveWheel();
-      const allVisible = wheel.items.filter(item => !item.hidden);
-      const totalWeight = allVisible.reduce((sum, item) => sum + ((item.weight && item.weight > 0) ? item.weight : 1), 0);
-
-      document.querySelectorAll('#cheatTableBody [data-cheat-index]').forEach(row => {
-        const idx = parseInt(row.getAttribute('data-cheat-index'), 10);
-        const item = wheel.items[idx];
-        if (!item) return;
-        const weight = (item.weight && item.weight > 0) ? item.weight : 1;
-        const pct = totalWeight > 0 ? (weight / totalWeight * 100) : 0;
-        const probEl = row.querySelector('.cheat-prob');
-        if (probEl) probEl.textContent = pct.toFixed(1) + '%';
-      });
-    }
-
-    function updateItemWeight(index, value) {
-      const wheel = getActiveWheel();
-      const item = wheel.items[index];
-      if (!item) return;
-      let w = parseFloat(value);
-      if (isNaN(w) || w <= 0) w = 1;
-      item.weight = w;
-      saveWheels();
-      refreshCheatProbabilities();
-      if (isCheatVisualEnabled()) drawWheel();
-    }
-
-    function resetCheatWeights() {
-      const wheel = getActiveWheel();
-      wheel.items.forEach(item => { delete item.weight; });
-      saveWheels();
-      renderCheatList();
-      if (isCheatVisualEnabled()) drawWheel();
     }
 
     function switchThemeEditTab(tab) {
@@ -1249,7 +949,7 @@
     function updateGlobalThemeVariable(varName, value, inputEl) {
       const cleanHex = value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
       if (cleanHex.length !== 6) {
-        alert('請輸入合法的 6 碼色號（例如 #114514）！');
+        alert('請輸入合法的 6 碼色號（例如 #121214）！');
         renderGlobalThemeSettings();
         return;
       }
@@ -1280,6 +980,7 @@
       drawWheel();
     }
 
+    /* 後後台專屬：匯出全域色彩 */
     function exportGlobalThemesJson() {
       const exportData = {
         type: 'global_theme_colors',
@@ -1295,6 +996,7 @@
       URL.revokeObjectURL(url);
     }
 
+    /* 後後台專屬：匯入全域色彩 */
     function handleImportGlobalThemeJson(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1314,7 +1016,7 @@
               light: { ...DEFAULT_LIGHT_THEME_VARS, ...(data.light || {}) }
             };
           } else {
-            alert('無法辨識此配色檔案格式！');
+            alert('無法辨識此配色檔案格式，請確認是否為全站主題配色 JSON 備份檔！');
             return;
           }
 
@@ -1324,7 +1026,7 @@
           drawWheel();
           alert('成功匯入全站介面主題配色！');
         } catch (err) {
-          alert('JSON 解析失敗。');
+          alert('JSON 解析失敗，請確認檔案格式是否正確。');
         }
         e.target.value = '';
       };
@@ -1334,7 +1036,7 @@
     let wheelsData = JSON.parse(localStorage.getItem('xp_wheels_store_v1')) || [
       { 
         id: 'default_xp', 
-        title: '去或不去', 
+        title: '同人女 XP 題庫', 
         items: DEFAULT_XP_POOL, 
         darkPalette: [...DEFAULT_DARK_PALETTE],
         lightPalette: [...DEFAULT_LIGHT_PALETTE]
@@ -1343,6 +1045,7 @@
     let activeWheelId = localStorage.getItem('xp_active_wheel_id') || wheelsData[0].id;
     let autoHideConfig = localStorage.getItem('xp_auto_hide_v1') === 'true';
 
+    // 相容性檢查與遷移
     wheelsData.forEach(w => {
       if (!w.darkPalette) {
         w.darkPalette = (w.palette && Array.isArray(w.palette) && w.palette.length > 0) 
@@ -1388,70 +1091,6 @@
     }
 
     document.getElementById('autoHideCheckbox').checked = autoHideConfig;
-
-    const STASH_KEY = 'xp_result_stash_text_v1';
-
-    function loadStash() {
-      const textarea = document.getElementById('stashTextarea');
-      textarea.value = localStorage.getItem(STASH_KEY) || '';
-      updateStashCount();
-    }
-
-    function saveStash() {
-      const textarea = document.getElementById('stashTextarea');
-      localStorage.setItem(STASH_KEY, textarea.value);
-      updateStashCount();
-    }
-
-    function updateStashCount() {
-      const text = document.getElementById('stashTextarea').value;
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      document.getElementById('stashCount').textContent = lines.length;
-    }
-
-    function appendResultToStash(item) {
-      const textarea = document.getElementById('stashTextarea');
-      const line = item.name;
-      textarea.value = textarea.value.trim() === '' ? line : `${textarea.value}\n${line}`;
-      saveStash();
-      textarea.scrollTop = textarea.scrollHeight;
-    }
-
-    function copyStash() {
-      const textarea = document.getElementById('stashTextarea');
-      const text = textarea.value;
-      if (!text.trim()) return alert('目前沒有可複製的結果！');
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          alert('已複製全部結果到剪貼簿！');
-        }).catch(() => {
-          fallbackCopyStash(textarea);
-        });
-      } else {
-        fallbackCopyStash(textarea);
-      }
-    }
-
-    function fallbackCopyStash(textarea) {
-      textarea.focus();
-      textarea.select();
-      try {
-        document.execCommand('copy');
-        alert('已複製全部結果到剪貼簿！');
-      } catch (e) {
-        alert('複製失敗。');
-      }
-      window.getSelection().removeAllRanges();
-    }
-
-    function resetStash() {
-      const textarea = document.getElementById('stashTextarea');
-      if (!textarea.value.trim()) return alert('目前沒有暫存的結果可重置！');
-      if (!confirm('確定要清空所有暫存的結果嗎？')) return;
-      textarea.value = '';
-      saveStash();
-    }
 
     function updateWheelSelect() {
       const frontSelect = document.getElementById('wheelSelect');
@@ -1543,6 +1182,7 @@
       renderAdminList();
     }
 
+    // 匯出題庫
     function exportCurrentWheel() {
       const wheel = getActiveWheel();
       const exportData = {
@@ -1572,6 +1212,7 @@
       URL.revokeObjectURL(url);
     }
 
+    // 匯出顏色
     function exportCurrentColors() {
       const wheel = getActiveWheel();
       const exportData = {
@@ -1609,6 +1250,7 @@
       URL.revokeObjectURL(url);
     }
 
+    // 應用顏色到所有轉盤
     function applyColorsToAllWheels() {
       const currentWheel = getActiveWheel();
       const isLight = isLightMode();
@@ -1630,6 +1272,7 @@
       alert(`已成功將「${modeName}顏色」同步套用到所有轉盤！`);
     }
 
+    // 匯入處理（共用入口）
     function handleImportFile(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1644,7 +1287,7 @@
             const newItems = parseTextItems(rawText);
 
             if (newItems.length === 0) {
-              alert('未能從 TXT 檔案中識別到有效項目！');
+              alert('未能從 TXT 檔案中識別到有效項目，請檢查格式！');
               e.target.value = '';
               return;
             }
@@ -1653,8 +1296,9 @@
 
             if (mergeIntoCurrent) {
               const wheel = getActiveWheel();
+              // 新項目一律置頂在最上方
               wheel.items.unshift(...newItems);
-              alert(`成功將 ${newItems.length} 個項目匯入到「${wheel.title}」！`);
+              alert(`成功將 ${newItems.length} 個項目匯入到「${wheel.title}」的最上方！`);
             } else {
               const newId = 'wheel_' + Date.now();
               wheelsData.unshift({
@@ -1674,7 +1318,7 @@
             initColorSettings();
             renderAdminList();
           } catch (err) {
-            alert('TXT 檔案讀取失敗。');
+            alert('TXT 檔案讀取失敗，請確認檔案格式。');
           }
           e.target.value = '';
         };
@@ -1707,7 +1351,7 @@
                 if (item.lightPalette) targetWheel.lightPalette = [...item.lightPalette];
               }
             });
-            alert('已成功還原所有轉盤的日間/夜間顏色設定！');
+            alert('已成功還原所有轉盤的日夜間顏色設定！');
           }
           else if (Array.isArray(data) && data[0] && data[0].id && data[0].items) {
              data.forEach(importedWheel => {
@@ -1729,7 +1373,7 @@
                lightPalette: data.lightPalette || [...DEFAULT_LIGHT_PALETTE]
              });
              activeWheelId = newId;
-             alert(`成功匯入轉盤！`);
+             alert(`成功匯入轉盤「${data.title || file.name.replace('.json', '')}」！`);
           }
           else if (Array.isArray(data) && data[0] && data[0].name) {
              const newId = 'wheel_' + Date.now();
@@ -1741,7 +1385,7 @@
                lightPalette: [...DEFAULT_LIGHT_PALETTE]
              });
              activeWheelId = newId;
-             alert(`成功匯入轉盤！`);
+             alert(`成功匯入轉盤，共 ${data.length} 個項目！`);
           } 
           else if (data.pool && Array.isArray(data.pool)) {
              const newId = 'wheel_' + Date.now();
@@ -1753,10 +1397,10 @@
                lightPalette: [...DEFAULT_LIGHT_PALETTE]
              });
              activeWheelId = newId;
-             alert(`成功匯入題庫！`);
+             alert(`成功匯入題庫，共 ${data.pool.length} 個項目！`);
           }
           else {
-             alert('找不到支援的資料格式！');
+             alert('找不到支援的資料格式，請確認 JSON 內容！');
              return;
           }
 
@@ -1766,13 +1410,14 @@
           initColorSettings();
           renderAdminList();
         } catch (err) {
-          alert('JSON 解析失敗。');
+          alert('JSON 解析失敗，請確認檔案格式是否為合法的 JSON。');
         }
         e.target.value = '';
       };
       reader.readAsText(file);
     }
 
+    // 格式化輸入：可輸入 # 或不輸入 #，只保留 # 與 6 碼英數，上限 7 字元
     function normalizeHexInput(input) {
       if (!input) return '';
       let str = input.toUpperCase().trim();
@@ -1781,6 +1426,7 @@
       return hasHash ? ('#' + pureHex) : pureHex;
     }
 
+    // 顏色設定管理：色號顯示一定帶 #，排版為 1 2 / 3 4 / 5 6 / 7 8（左右交錯）
     function initColorSettings() {
       const palette = getActiveWheelCurrentPalette();
       const container = document.getElementById('colorSettingsContainer');
@@ -1799,8 +1445,11 @@
       const rightColIndices = [];
 
       for (let i = 0; i < palette.length; i++) {
-        if (i % 2 === 0) leftColIndices.push(i);
-        else rightColIndices.push(i);
+        if (i % 2 === 0) {
+          leftColIndices.push(i);
+        } else {
+          rightColIndices.push(i);
+        }
       }
       
       const createColorGroup = (indices) => {
@@ -1813,6 +1462,7 @@
         
         indices.forEach((index) => {
           let color = palette[index];
+          // 確保顯示一定帶 # 且為大寫
           if (!color.startsWith('#')) color = '#' + color;
           const displayHex = color.toUpperCase();
           const itemDiv = document.createElement('div');
@@ -1833,11 +1483,12 @@
                    maxlength="7"
                    oninput="this.value = normalizeHexInput(this.value);" 
                    onchange="updateWheelPaletteColor(${index}, this.value, this);" 
-                   style="flex: 1; min-width: 0; height: 38px; box-sizing: border-box; background: var(--bar-bg); border: 1px solid var(--border-card); color: var(--text-main); padding: 0 8px; border-radius: 6px; font-size: 0.875rem; font-family: monospace; text-transform: uppercase;">
+                   style="flex: 1; min-width: 0; height: 38px; box-sizing: border-box; background: var(--bar-bg); border: 1px solid var(--border-card); color: var(--text-main); padding: 0 8px; border-radius: 6px; font-size: 0.85rem; font-family: monospace; text-transform: uppercase;">
             ${delButtonHtml}
           `;
           groupDiv.appendChild(itemDiv);
         });
+        
         return groupDiv;
       };
       
@@ -1849,7 +1500,9 @@
 
     function addNewPaletteColor() {
       const palette = getActiveWheelCurrentPalette();
-      if (palette.length >= 10) return alert('轉盤顏色最多設定 10 個！');
+      if (palette.length >= 10) {
+        return alert('轉盤扇形顏色最多設定 10 個！');
+      }
 
       const randomHex = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
       palette.push(randomHex);
@@ -1860,7 +1513,9 @@
 
     function deletePaletteColor(index) {
       const palette = getActiveWheelCurrentPalette();
-      if (palette.length <= 1) return alert('轉盤至少需要保留 1 個顏色！');
+      if (palette.length <= 1) {
+        return alert('轉盤至少需要保留 1 個扇形顏色！');
+      }
 
       palette.splice(index, 1);
       saveWheels();
@@ -1869,9 +1524,10 @@
     }
 
     function updateWheelPaletteColor(index, value, inputEl) {
+      // 提取純 6 碼 Hex（無論使用者有無輸入 #）
       const cleanHex = value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
       if (cleanHex.length !== 6) {
-        alert('請輸入完整的 6 碼十六進制色號！');
+        alert('請輸入完整的 6 碼十六進制色號<br>（有無輸入 # 均可，例：EC4899 或 #EC4899）');
         initColorSettings();
         return;
       }
@@ -1881,6 +1537,7 @@
       palette[index] = fullHex;
       saveWheels();
 
+      // 輸入完成後強制顯示為帶 # 的大寫格式
       if (inputEl) inputEl.value = fullHex;
       const previewBox = document.getElementById(`colorPreview_${index}`);
       if (previewBox) previewBox.style.background = fullHex;
@@ -1891,33 +1548,16 @@
     function resetColorsToDefault() {
       const isLight = isLightMode();
       const modeName = isLight ? '日間' : '夜間';
-      if (!confirm(`確定要重置目前轉盤「${modeName}」的顏色為預設值嗎？`)) return;
+      if (!confirm(`確定要重置目前轉盤的「${modeName}扇形顏色」為預設值嗎？`)) return;
       const wheel = getActiveWheel();
-      if (isLight) wheel.lightPalette = [...DEFAULT_LIGHT_PALETTE];
-      else wheel.darkPalette = [...DEFAULT_DARK_PALETTE];
+      if (isLight) {
+        wheel.lightPalette = [...DEFAULT_LIGHT_PALETTE];
+      } else {
+        wheel.darkPalette = [...DEFAULT_DARK_PALETTE];
+      }
       saveWheels();
       initColorSettings();
       drawWheel();
-    }
-
-    function getWheelSliceLayout(wheel) {
-      const visibleData = wheel.items
-        .map((item, index) => ({ item, originalIndex: index }))
-        .filter(x => !x.item.hidden);
-
-      const total = visibleData.length;
-      const weights = visibleData.map(x => (x.item.weight && x.item.weight > 0) ? x.item.weight : 1);
-      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
-      const useWeightedVisual = isCheatVisualEnabled();
-
-      let cursorDeg = 0;
-      return visibleData.map((x, i) => {
-        const fraction = useWeightedVisual ? (weights[i] / totalWeight) : (1 / total);
-        const sliceDeg = fraction * 360;
-        const startDeg = cursorDeg;
-        cursorDeg += sliceDeg;
-        return { item: x.item, originalIndex: x.originalIndex, startDeg, sliceDeg, weight: weights[i] };
-      });
     }
 
     function drawWheel() {
@@ -1925,8 +1565,8 @@
       const ctx = canvas.getContext('2d');
       const wheel = getActiveWheel();
       const palette = getActiveWheelCurrentPalette();
-      const layout = getWheelSliceLayout(wheel);
-      const total = layout.length;
+      const visibleItems = wheel.items.filter(item => !item.hidden);
+      const total = visibleItems.length;
 
       const wheelTextColor = getComputedStyle(document.documentElement).getPropertyValue('--wheel-text').trim() || '#ffffff';
 
@@ -1945,16 +1585,17 @@
         ctx.stroke();
 
         ctx.fillStyle = '#6b7280';
-        ctx.font = `bold 28px ${UI_FONT_STACK}`;
+        ctx.font = 'bold 28px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('轉盤目前沒有可顯示的項目', centerX, centerY);
         return;
       }
 
+      const arcSize = (2 * Math.PI) / total;
+
       for (let i = 0; i < total; i++) {
-        const angle = (layout[i].startDeg * Math.PI) / 180;
-        const arcSize = (layout[i].sliceDeg * Math.PI) / 180;
+        const angle = i * arcSize;
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
@@ -1979,43 +1620,35 @@
         else if (total > 25) fontSize = 20;
         else if (total > 15) fontSize = 24;
 
-        ctx.font = `bold ${fontSize}px ${UI_FONT_STACK}`;
+        ctx.font = `bold ${fontSize}px sans-serif`;
 
-        let text = layout[i].item.name;
+        let text = visibleItems[i].name;
         if (text.length > 7) text = text.substring(0, 6) + '…';
         ctx.fillText(text, radius - 28, 0);
         ctx.restore();
       }
     }
 
-    function pickWeightedIndex(weights) {
-      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
-      let r = Math.random() * totalWeight;
-      for (let i = 0; i < weights.length; i++) {
-        r -= weights[i];
-        if (r <= 0) return i;
-      }
-      return weights.length - 1;
-    }
-
     function spinWheel() {
       const wheel = getActiveWheel();
-      const layout = getWheelSliceLayout(wheel);
+      const visibleData = wheel.items
+        .map((item, index) => ({ item, originalIndex: index }))
+        .filter(x => !x.item.hidden);
 
-      if (layout.length < 2) {
-        return alert('至少需要 2 個「顯示中」項目才能開始！\n請至後台解除隱藏或新增項目');
+      if (visibleData.length < 2) {
+        return alert('轉盤內至少需要 2 個「顯示中」的項目才能開始旋轉！請至後台解除隱藏或新增項目。');
       }
       if (isSpinning) return;
 
       isSpinning = true;
       document.getElementById('spinBtn').disabled = true;
 
-      const weights = layout.map(x => x.weight);
-      const winningIndex = pickWeightedIndex(weights);
-      const winnerSlice = layout[winningIndex];
+      const total = visibleData.length;
+      const winningIndex = Math.floor(Math.random() * total);
 
-      const targetDegCenter = winnerSlice.startDeg + winnerSlice.sliceDeg / 2;
-
+      const sliceDeg = 360 / total;
+      const targetDegCenter = (winningIndex * sliceDeg) + (sliceDeg / 2);
+      
       const extraRounds = 360 * (6 + Math.floor(Math.random() * 3));
       const targetRotation = extraRounds + (270 - targetDegCenter);
 
@@ -2028,14 +1661,14 @@
       setTimeout(() => {
         isSpinning = false;
         document.getElementById('spinBtn').disabled = false;
-
-        showResultModal(winnerSlice.item, winnerSlice.originalIndex);
-        appendResultToStash(winnerSlice.item);
+        
+        const winner = visibleData[winningIndex];
+        showResultModal(winner.item, winner.originalIndex);
 
         if (document.getElementById('autoHideCheckbox').checked) {
-          wheel.items[winnerSlice.originalIndex].hidden = true;
+          wheel.items[winner.originalIndex].hidden = true;
           saveWheels();
-          drawWheel();
+          drawWheel(); 
           updateWheelSelect();
         }
 
@@ -2104,6 +1737,7 @@
       if (!name) return alert('請輸入項目名稱！');
 
       const wheel = getActiveWheel();
+      // 置頂加入
       wheel.items.unshift({ name, desc, hidden: false });
       saveWheels();
 
@@ -2121,7 +1755,7 @@
         name = line;
         desc = '';
       } else {
-        name = line.slice(0, spaceIndex).trim();
+        name = line.slice(spaceIndex + 1).trim();
         desc = line.slice(spaceIndex + 1).trim();
       }
       return name ? { name, desc, hidden: false } : null;
@@ -2161,9 +1795,11 @@
       if (!rawText.trim()) return alert('請填寫批量匯入文字！');
 
       const newItems = parseTextItems(rawText);
-      if (newItems.length === 0) return alert('未能識別到有效項目！');
+
+      if (newItems.length === 0) return alert('未能識別到有效項目，請檢查格式！');
 
       const wheel = getActiveWheel();
+      // 置頂加入
       wheel.items.unshift(...newItems);
       saveWheels();
 
@@ -2186,9 +1822,14 @@
     function unhideAllItems() {
       const wheel = getActiveWheel();
       const hiddenCount = wheel.items.filter(item => item.hidden).length;
-      if (hiddenCount === 0) return alert('目前沒有任何已隱藏的項目！');
+      if (hiddenCount === 0) {
+        return alert('目前沒有任何已隱藏的項目！');
+      }
 
-      wheel.items.forEach(item => { item.hidden = false; });
+      wheel.items.forEach(item => {
+        item.hidden = false;
+      });
+
       saveWheels();
       renderAdminList();
       updateWheelSelect();
@@ -2196,54 +1837,30 @@
       alert(`已將 ${hiddenCount} 個隱藏項目全部恢復顯示！`);
     }
 
-    function batchDeleteHiddenItems() {
-      const wheel = getActiveWheel();
-      const hiddenCount = wheel.items.filter(item => item.hidden).length;
-      if (hiddenCount === 0) return alert('目前沒有任何已隱藏的項目！');
-      if (!confirm(`確定要刪除 ${hiddenCount} 個已隱藏的項目嗎？`)) return;
-
-      wheel.items = wheel.items.filter(item => !item.hidden);
-      saveWheels();
-      renderAdminList();
-      updateWheelSelect();
-      drawWheel();
-      alert(`已刪除 ${hiddenCount} 個隱藏項目！`);
-    }
-
-    function itemMatchesSearch(item, term) {
-      if (!term) return true;
-      const needle = term.trim().toLowerCase();
-      if (!needle) return true;
-      return item.name.toLowerCase().includes(needle) || (item.desc || '').toLowerCase().includes(needle);
-    }
-
     function renderAdminList() {
       const wheel = getActiveWheel();
-      const sharedSearch = document.getElementById('adminItemsSearch').value;
-      const visibleSearch = sharedSearch;
-      const hiddenSearch = sharedSearch;
       const visibleItems = [];
       const hiddenItems = [];
 
       wheel.items.forEach((item, index) => {
-        if (item.hidden) hiddenItems.push({ item, index });
-        else visibleItems.push({ item, index });
+        if (item.hidden) {
+          hiddenItems.push({ item, index });
+        } else {
+          visibleItems.push({ item, index });
+        }
       });
 
       document.getElementById('adminVisibleCount').textContent = visibleItems.length;
       document.getElementById('adminHiddenCount').textContent = hiddenItems.length;
 
-      const filteredVisible = visibleItems.filter(({ item }) => itemMatchesSearch(item, visibleSearch));
-      const filteredHidden = hiddenItems.filter(({ item }) => itemMatchesSearch(item, hiddenSearch));
-
+      // 渲染顯示中的列表
       const tbody = document.getElementById('adminTableBody');
       tbody.innerHTML = '';
 
-      if (filteredVisible.length === 0) {
-        const emptyMsg = visibleItems.length === 0 ? '目前沒有顯示中的項目' : '沒有符合搜尋條件的項目';
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:16px;">${emptyMsg}</td></tr>`;
+      if (visibleItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:16px;">目前沒有顯示中的項目</td></tr>`;
       } else {
-        filteredVisible.forEach(({ item, index }) => {
+        visibleItems.forEach(({ item, index }) => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td style="text-align:center;">
@@ -2262,14 +1879,14 @@
         });
       }
 
+      // 渲染已隱藏的列表：欄位格式與操作跟一開始的列表一致
       const hiddenTbody = document.getElementById('adminHiddenTableBody');
       hiddenTbody.innerHTML = '';
 
-      if (filteredHidden.length === 0) {
-        const emptyMsg = hiddenItems.length === 0 ? '目前沒有隱藏的項目' : '沒有符合搜尋條件的項目';
-        hiddenTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:16px;">${emptyMsg}</td></tr>`;
+      if (hiddenItems.length === 0) {
+        hiddenTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:16px;">目前沒有隱藏的項目</td></tr>`;
       } else {
-        filteredHidden.forEach(({ item, index }) => {
+        hiddenItems.forEach(({ item, index }) => {
           const tr = document.createElement('tr');
           tr.classList.add('row-hidden');
           tr.innerHTML = `
@@ -2290,43 +1907,24 @@
       }
     }
 
-    let editingItemIndex = null;
-
     function editItem(index) {
       const wheel = getActiveWheel();
       const item = wheel.items[index];
-      if (!item) return;
 
-      editingItemIndex = index;
-      document.getElementById('editItemName').value = item.name;
-      document.getElementById('editItemDesc').value = item.desc || '';
-      document.getElementById('editItemModal').classList.add('show');
-    }
+      const newName = prompt('編輯名稱：', item.name);
+      if (newName === null) return;
+      if (!newName.trim()) return alert('名稱不能為空！');
 
-    function closeEditItemModal() {
-      editingItemIndex = null;
-      document.getElementById('editItemModal').classList.remove('show');
-    }
+      const newDesc = prompt('編輯描述（可留空）：', item.desc || '');
+      if (newDesc === null) return;
 
-    function saveEditItemModal() {
-      if (editingItemIndex === null) return closeEditItemModal();
+      item.name = newName.trim();
+      item.desc = newDesc.trim();
 
-      const newName = document.getElementById('editItemName').value.trim();
-      if (!newName) return alert('名稱不能為空！');
-      const newDesc = document.getElementById('editItemDesc').value.trim();
-
-      const wheel = getActiveWheel();
-      const item = wheel.items[editingItemIndex];
-      if (item) {
-        item.name = newName;
-        item.desc = newDesc;
-        saveWheels();
-        renderAdminList();
-        updateWheelSelect();
-        drawWheel();
-      }
-
-      closeEditItemModal();
+      saveWheels();
+      renderAdminList();
+      updateWheelSelect();
+      drawWheel();
     }
 
     function deleteItem(index) {
@@ -2341,11 +1939,11 @@
       drawWheel();
     }
 
+    // 初始化主題與顏色配置
     initTheme();
     updateWheelSelect();
     initColorSettings();
     drawWheel();
-    loadStash();
   </script>
 </body>
 </html>
