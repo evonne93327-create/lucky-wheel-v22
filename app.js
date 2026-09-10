@@ -1684,7 +1684,7 @@ function showGuideModal(type) {
   const iconEl = document.getElementById('guideModalIcon');
 
   if (type === 'empty') {
-    iconEl.textContent = '🎡';
+    iconEl.textContent = '📂';
     titleEl.textContent = '這個轉盤目前沒有可用的項目';
     descEl.textContent = '趕快新增一些選項，或者到後台解除隱藏吧！';
     btnEl.textContent = '前往後台管理';
