@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta charset="UTF-8">
+  <title>命運轉盤</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style id="customThemeStyle"></style>
+</head>
+<body>
+
+  <main>
+    <!-- 前台畫面 -->
+    <div id="frontView" class="view-content" style="display: flex; flex-direction: column; align-items: center;">
+      <div class="header-area">
+        <h1 class="title">命運轉盤</h1>
+        <div class="subtitle">轉動命運的輪盤，抽出此刻的靈魂共鳴</div>
+        
+        <div class="wheel-selector-bar">
+          <select id="wheelSelect" class="wheel-select-dropdown" onchange="onWheelSelectChange()" aria-label="選擇轉盤"></select>
+        </div>
+      </div>
+
+      <div class="wheel-wrapper">
+        <div class="wheel-shadow-ring"></div>
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="800" height="800"></canvas>
+        <button type="button" class="wheel-center-cap" title="點擊直接旋轉轉盤" onclick="spinWheel()" aria-label="旋轉轉盤">🔮</button>
+      </div>
+
+      <button id="spinBtn" class="btn-spin" onclick="spinWheel()">旋轉命運</button>
+
+      <label class="checkbox-label">
+        <input type="checkbox" id="autoHideCheckbox" onchange="saveAppConfig()">
+        抽出後自動隱藏該項目
+      </label>
+
+      <!-- 抽選結果暫存區 -->
+      <div class="stash-section">
+        <div class="stash-header">
+          <span class="stash-title">📋 結果暫存區 (<span id="stashCount">0</span>)</span>
+        </div>
+        <div class="admin-tip-text">每次轉出結果會自動記錄於下方，方便直接複製使用。</div>
+        <textarea id="stashTextarea" class="stash-textarea" placeholder="抽出的結果會自動記錄在這裡…" onchange="saveStash()" oninput="saveStash()"></textarea>
+        <div class="stash-btn-row">
+          <button class="btn-stash-copy" style="flex: 1;" onclick="copyStash()">複製全部結果</button>
+          <button class="btn-stash-reset" style="flex: 1;" onclick="resetStash()">重置</button>
+        </div>
+      </div>
+
+      <div>
+        <button class="admin-entry-btn" onclick="openAdminView()">後台管理&題庫編輯</button>
+      </div>
+      <div>
+        <button id="frontThemeToggleBtn" class="admin-entry-btn" style="margin-top: 12px;" onclick="toggleTheme()" title="點擊切換模式">✨ 跟隨系統</button>
+      </div>
+    </div>
+
+    <!-- 第一層：題庫管理後台畫面 -->
+    <div id="adminView" class="admin-view">
+      <div class="admin-card">
+        <div class="admin-title-bar">
+          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">轉盤管理</h2>
+          <button class="admin-entry-btn" style="margin-top:0;" onclick="goBackToFront()">返回轉盤</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+          <select id="adminWheelSelect" class="wheel-select-dropdown" style="width: 100%; max-width: none;" onchange="onAdminWheelSelectChange()" aria-label="後台選擇轉盤"></select>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-primary" style="flex: 1;" onclick="promptCreateWheel()">新增轉盤</button>
+            <button class="btn-primary" style="flex: 1;" onclick="renameCurrentWheel()">重新命名</button>
+            <button id="btnDeleteWheel" class="btn-batch-delete" style="flex: 1;" onclick="deleteCurrentWheel()">刪除此轉盤</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">➕ 單筆新增</div>
+          <input type="text" id="singleName" class="admin-input" placeholder="名稱（必填）">
+          <input type="text" id="singleDesc" class="admin-input" placeholder="描述（選填，可留空）">
+          <button class="btn-primary" style="width: 100%;" onclick="addSingleItem()">新增項目</button>
+        </div>
+
+        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">📑 批量匯入</div>
+          <div class="admin-tip-text">
+            格式規範：支援兩種寫法，可混用。<br>①「名稱,描述」同一行，中間以英文逗號「,」分隔；<br>②「名稱」和「描述」分兩行，中間用「空行」跟其他項目分隔。
+          </div>
+          <textarea id="batchText" class="admin-textarea" placeholder="破鏡重圓,分開後又複合&#10;&#10;聖人私心&#10;為一人甘願跌落神壇"></textarea>
+          <label class="checkbox-label" style="margin: 4px 0 12px;">
+            <input type="checkbox" id="batchCheckDuplicate" checked>
+            匯入前檢查是否有重複項目
+          </label>
+          <button id="batchImportBtn" class="btn-primary" style="width: 100%;" onclick="addBatchItems()">解析並匯入</button>
+        </div>
+
+        <div id="adminItemsSectionWrap" style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">📃 轉盤項目</div>
+          <div class="items-frame">
+            <div class="admin-search-row">
+              <div class="admin-search-wrap">
+                <span class="admin-search-icon" aria-hidden="true">🔍</span>
+                <input type="text" id="adminItemsSearch" class="admin-input admin-search-input" placeholder="搜尋名稱或描述…（同時搜尋顯示中與已隱藏）" oninput="onAdminSearchInput()">
+                <button type="button" id="adminItemsSearchClearBtn" class="admin-search-clear-btn" onclick="clearAdminSearch()" aria-label="清除搜尋內容">✕</button>
+              </div>
+              <button id="adminSortDirBtn" type="button" class="admin-sort-dir-btn" aria-label="切換排序方向">⬆️</button>
+            </div>
+            <select id="adminSortSelect" class="admin-sort-select" onchange="onAdminSortChange()" aria-label="排序方式">
+              <option value="original">排序：原始匯入順序</option>
+              <option value="alpha">排序：依首字母</option>
+              <option value="length">排序：依字數</option>
+            </select>
+            <div class="admin-tip-text" style="margin-top: 6px;">點一下切換升冪/降冪，點兩下或長按可選擇排序方式<br>打勾代表顯示，取消勾選的項目將移至下方隱藏清單</div>
+
+            <div class="items-frame-subtitle">顯示中 (<span id="adminVisibleCount">0</span>)</div>
+            <div class="table-container" style="margin-bottom: 20px; padding: 0 10px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">顯示</th>
+                    <th>名稱</th>
+                    <th style="width: 35%;">描述</th>
+                    <th style="width: 64px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="items-frame-subtitle">已隱藏 (<span id="adminHiddenCount">0</span>)</div>
+            <div class="table-container" style="margin-bottom: 12px; padding: 0 10px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">顯示</th>
+                    <th>名稱</th>
+                    <th style="width: 35%;">描述</th>
+                    <th style="width: 64px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminHiddenTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 12px; margin-bottom: 24px;">
+            <button id="btnUnhideAll" class="btn-primary" style="flex: 1;" onclick="unhideAllItems()">全部取消隱藏</button>
+            <button id="btnBatchDelete" class="btn-batch-delete" style="flex: 1;" onclick="batchDeleteHiddenItems()">批量刪除</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">🎨 轉盤顏色 (<span id="currentModeLabel">夜間</span>模式)</div>
+          <div class="admin-tip-text">日/夜間模式顏色各自獨立。最多可支援10種顏色</div>
+          
+          <div class="table-container" style="max-height: none; overflow: visible; padding: 12px 10px; margin-bottom: 16px;">
+            <div id="colorSettingsContainer" style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;"></div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 8px;">
+              <button id="btnAddColor" class="btn-primary" style="flex: 1;" onclick="addNewPaletteColor()">新增顏色</button>
+              <button class="btn-primary" style="flex: 1;" onclick="resetColorsToDefault()">重置為預設</button>
+            </div>
+            <button class="btn-primary" style="width: 100%;" onclick="applyColorsToAllWheels()">將此顏色應用到所有轉盤</button>
+          </div>
+        </div>
+        
+        <div style="margin-top: 32px; border-top: 1px dashed var(--border-card); padding-top: 24px;">
+          <div class="admin-section-title">💾 JSON / TXT 檔案 匯入 / 匯出</div>
+          <div class="admin-tip-text">
+            共用匯入按鈕：支援轉盤題庫與顏色設定。<br>
+            TXT格式規範：支援兩種寫法，可混用。<br>①「名稱,描述」同一行，中間以英文逗號「,」分隔；<br>②「名稱」和「描述」分兩行，中間用「空行」跟其他項目分隔。
+          </div>
+          <input type="file" id="importJsonInput" accept=".json,.txt" style="display:none;" onchange="handleImportFile(event)">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div>
+              <button class="btn-primary" style="width: 100%;" onclick="document.getElementById('importJsonInput').click()">📥 從 JSON / TXT 匯入</button>
+              <label class="checkbox-label" style="margin-top: 10px; font-size: 0.8rem;">
+                <input type="checkbox" id="txtImportMergeCurrent">
+                TXT 匯入時加入目前所選轉盤（不勾選則建立為新轉盤）
+              </label>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-primary" style="flex: 1;" onclick="exportCurrentWheel()">📤 匯出當前轉盤題庫</button>
+              <button class="btn-primary" style="flex: 1;" onclick="exportAllWheels()">📤 匯出所有轉盤題庫</button>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-primary" style="flex: 1;" onclick="exportCurrentColors()">🎨 匯出當前轉盤顏色</button>
+              <button class="btn-primary" style="flex: 1;" onclick="exportAllColors()">🎨 匯出所有轉盤顏色</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; text-align: center;">
+          <button class="admin-entry-btn" style="margin-top: 0;" onclick="openCheatViewDirect()">🎲 機率調整</button>
+          <div style="margin-top: 12px;">
+            <button id="adminThemeToggleBtn" class="admin-entry-btn" style="margin-top: 0;" onclick="handleAdminThemeClick()" title="點擊切換模式">✨ 跟隨系統</button>
+            <div class="admin-tip-text" style="margin-top: 8px; margin-bottom: 0;">連點 5 次有驚喜</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 第二層：全站整體顏色進階後台畫面 -->
+    <div id="themeAdminView" class="admin-view">
+      <div class="admin-card">
+        <div class="admin-title-bar">
+          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">🎨 全站配色管理</h2>
+          <button class="admin-entry-btn" style="margin-top:0;" onclick="closeThemeAdminView()">確定</button>
+        </div>
+
+        <div class="admin-tip-text">日間/夜間模式顏色各自獨立。修改後即時全站生效並自動保存。</div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <button id="tabDarkBtn" class="theme-tab-btn active" onclick="switchThemeEditTab('dark')">🌙 編輯夜間模式配色</button>
+          <button id="tabLightBtn" class="theme-tab-btn" onclick="switchThemeEditTab('light')">☀️ 編輯日間模式配色</button>
+        </div>
+
+        <div id="globalThemeInputsContainer" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;"></div>
+
+        <button class="btn-primary" style="width: 100%; margin-top: 8px; margin-bottom: 8px;" onclick="resetCurrentThemeVariables()">重置此模式配色為預設</button>
+
+        <input type="file" id="importGlobalThemeJsonInput" accept=".json" style="display:none;" onchange="handleImportGlobalThemeJson(event)">
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-primary" style="flex: 1;" onclick="document.getElementById('importGlobalThemeJsonInput').click()">📥 匯入全域主題配色</button>
+          <button class="btn-primary" style="flex: 1;" onclick="exportGlobalThemesJson()">📤 匯出全域主題配色</button>
+        </div>
+
+        <div style="margin-top: 32px; text-align: center;">
+          <button id="themeAdminToggleBtn" class="admin-entry-btn" style="margin-top: 0;" onclick="toggleTheme()" title="點擊切換模式">✨ 跟隨系統</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 第三層：機率作弊面板 -->
+    <div id="cheatView" class="admin-view">
+      <div class="admin-card">
+        <div class="admin-title-bar">
+          <h2 style="font-size: 1.25rem; font-weight:800; color: var(--text-main);">🎲 機率設定</h2>
+          <button class="admin-entry-btn" style="margin-top:0;" onclick="closeCheatView()">確定</button>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div class="admin-section-title" style="margin-bottom: 6px; font-size: 0.875rem;">目前編輯的轉盤：</div>
+          <select id="cheatWheelSelect" class="wheel-select-dropdown" style="width: 100%; max-width: none;" onchange="onCheatWheelSelectChange()" aria-label="機率設定選擇轉盤"></select>
+        </div>
+
+        <div class="admin-tip-text">調整轉盤中各項目的權重或直接輸入百分比，數值會自動雙向換算。<br>權重與百分比轉換皆四捨五入至小數點第三位。</div>
+
+        <label class="checkbox-label" style="margin: 4px 0 12px;">
+          <input type="checkbox" id="cheatVisualToggle" onchange="toggleCheatVisualMode()">
+          轉盤外觀跟著機率改變
+        </label>
+
+        <button class="btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="resetCheatWeights()">全部重置為 1（公平機率）</button>
+
+        <div class="admin-search-row">
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="cheatSearchInput" class="admin-input admin-search-input" placeholder="搜尋項目名稱…" oninput="onCheatSearchInput()">
+            <button type="button" id="cheatSearchClearBtn" class="admin-search-clear-btn" onclick="clearCheatSearch()" aria-label="清除搜尋內容">✕</button>
+          </div>
+          <button id="cheatSortDirBtn" type="button" class="admin-sort-dir-btn" aria-label="切換機率列表排序方向">⬆️</button>
+        </div>
+        <select id="cheatSortSelect" class="admin-sort-select" onchange="onCheatSortChange()" aria-label="機率列表排序方式">
+          <option value="original">排序：原始匯入順序</option>
+          <option value="alpha">排序：依首字母</option>
+          <option value="length">排序：依字數</option>
+          <option value="weight">排序：依機率大小</option>
+        </select>
+        <div class="admin-tip-text" style="margin-top: 6px;">點一下切換升冪/降冪，點兩下或長按可選擇排序方式</div>
+        <div id="cheatTableContainer" class="table-container" style="max-height: none; overflow: visible; margin-bottom: 12px; padding: 10px 10px 0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 36%;">名稱</th>
+                <th style="width: 32%;">權重</th>
+                <th style="width: 32%;">機率 (%)</th>
+              </tr>
+            </thead>
+            <tbody id="cheatTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 通用提示彈窗 -->
+  <div id="guideModal" class="modal-backdrop">
+    <div class="result-modal-box" style="max-width: 380px; padding: 26px 20px;">
+      <div id="guideModalIcon" class="result-icon" style="font-size: 2.5rem; margin-bottom: 8px;">🎡</div>
+      <div id="guideModalTitle" class="result-name" style="font-size: 1.25rem; margin-bottom: 8px;">提示訊息</div>
+      <div id="guideModalDesc" class="result-desc" style="font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">詳細說明文字</div>
+      <button id="guideModalBtn" class="btn-primary" style="width: 100%; height: 42px; font-size: 1rem;" onclick="closeGuideModal()">前往後台管理</button>
+      <button class="admin-entry-btn" style="margin: 10px auto 0; display: block; border: none;" onclick="closeGuideModal()">關閉</button>
+    </div>
+  </div>
+
+  <!-- 匯入內容預覽彈窗 -->
+  <div id="importPreviewModal" class="modal-backdrop">
+    <div class="edit-modal-box" style="max-width: 520px;">
+      <div class="edit-modal-title">📥 匯入內容預覽</div>
+      <div id="importPreviewTip" class="admin-tip-text" style="margin-bottom: 10px;">請確認以下解析內容是否正確：</div>
+      
+      <div class="table-container" style="max-height: 240px; margin-bottom: 12px; padding: 0 8px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">名稱</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody id="importPreviewTableBody"></tbody>
+        </table>
+      </div>
+
+      <label id="previewDuplicateLabel" class="checkbox-label" style="margin: 4px 0 16px;">
+        <input type="checkbox" id="previewCheckDuplicate" checked>
+        自動略過與現有轉盤重複的項目
+      </label>
+
+      <div class="edit-modal-btn-row">
+        <button class="btn-batch-delete" style="flex: 1;" onclick="closeImportPreviewModal()">取消</button>
+        <button class="btn-primary" style="flex: 1;" onclick="confirmImportItems()">確認匯入</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultModal" class="modal-backdrop">
+    <div class="result-modal-box">
+      <div class="result-icon">✨️</div>
+      <div class="result-name" id="modalResultName">項目名稱</div>
+      <div class="result-desc" id="modalResultDesc">項目描述</div>
+      <button class="btn-spin" style="padding: 10px 32px; font-size: 1rem;" onclick="closeResultModal()">確認收下</button>
+      <button class="admin-entry-btn" style="margin: 14px auto 0; display: block;" onclick="hideResultItem()">隱藏此項目</button>
+    </div>
+  </div>
+
+  <div id="editItemModal" class="modal-backdrop">
+    <div class="edit-modal-box">
+      <div class="edit-modal-title">📝 編輯項目</div>
+      <input type="text" id="editItemName" class="admin-input" placeholder="名稱（必填）">
+      <input type="text" id="editItemDesc" class="admin-input" style="margin-bottom: 4px;" placeholder="描述（選填，可留空）">
+      <div class="edit-modal-btn-row">
+        <button class="btn-batch-delete" style="flex: 1;" onclick="closeEditItemModal()">取消</button>
+        <button class="btn-primary" style="flex: 1;" onclick="saveEditItemModal()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="wheelNameModal" class="modal-backdrop">
+    <div class="edit-modal-box">
+      <div class="edit-modal-title" id="wheelNameModalTitle">📝 新增轉盤</div>
+      <input type="text" id="wheelNameInput" class="admin-input" style="margin-bottom: 4px;" placeholder="請輸入轉盤名稱">
+      <div class="edit-modal-btn-row">
+        <button class="btn-batch-delete" style="flex: 1;" onclick="closeWheelNameModal()">取消</button>
+        <button class="btn-primary" style="flex: 1;" onclick="saveWheelNameModal()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部懸浮提示 Toast -->
+  <div id="toastNotification" class="toast-container" aria-live="polite">
+    <span class="toast-icon">✔</span>
+    <span id="toastMessage">提示文字</span>
+  </div>
+    <script src="app.js"></script>
+  <script>
+    // 註冊 PWA 離線快取服務
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.log('Service Worker 註冊失敗:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
