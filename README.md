@@ -51,7 +51,7 @@ style.css     樣式與 CSS 變數（日 / 夜間主題）
 manifest.json PWA 設定（名稱、圖示、standalone 顯示）
 sw.js         Service Worker，快取靜態資源以支援離線使用
 favicon.png   網站圖示
-L (192 x 192)_*.png / L_*.png   PWA 圖示（192 / 512）
+icon-192.png / icon-512.png    PWA 圖示（192 / 512）
 ```
 
 ## 使用方式

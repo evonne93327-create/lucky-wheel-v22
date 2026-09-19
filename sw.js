@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wheel-app-v1';
+const CACHE_NAME = 'wheel-app-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -6,7 +6,8 @@ const ASSETS_TO_CACHE = [
   './app.js',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './favicon.png'
 ];
 
 // 安裝並快取所有靜態資源
